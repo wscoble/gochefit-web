@@ -1,0 +1,109 @@
+body {
+  background-color: #eee;
+  padding-top: 100px;
+}
+
+.header {
+  min-width: 100%;
+  height: 95px;
+  left: 0;
+  top: 0;
+  position: fixed;
+  background-position: bottom;
+
+  .content {
+    margin: 20px;
+
+    .logo {
+      float: left;
+    }
+
+    ul, li {
+      float: left;
+      list-style: none;
+    }
+
+    .navigation {
+      float: left;
+    }
+
+    .social img {
+      width: 32px;
+      height: 32px;
+      margin: 0 10px;
+    }
+  }
+}
+
+#howitworks {
+  width: 100%;
+
+  h2 {
+    margin: 0 auto;
+    display: block;
+  }
+
+  .tile:not(:last-child)::after {
+    content: url('/assets/next right chevron.png');
+    position: absolute;
+    right: -9px;
+    top: 100px;
+  }
+
+  .tile {
+    float: left;
+    color: white;
+    position: relative;
+    margin: 0 20px;
+
+    .number {
+      font-size: 95px;
+      position: absolute;
+      top: 4px;
+      left: 25px;
+    }
+
+    .thumbnail {
+      position: absolute;
+      top: 29px;
+      left: 78px;
+    }
+
+    .title {
+      position: absolute;
+      top: 70px;
+      left: 78px;
+      font-size: 22px;
+    }
+
+    .content {
+      position: absolute;
+      top: 120px;
+      left: 25px;
+    }
+  }
+}
+
+#cta {
+  width: 100%;
+
+  .tile {
+    float:left;
+    color: white;
+    position: relative;
+    margin: 0 20px;
+
+    .title {
+      position: absolute;
+      font-size: 30px;
+      width: 100%;
+      text-align: center;
+      left: 0;
+      top: 120px;
+    }
+  }
+}
+
+.clearfix {
+  clear: both;
+}

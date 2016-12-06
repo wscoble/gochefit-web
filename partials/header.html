@@ -1,0 +1,25 @@
+{{#with common.header.items.0.fields}}
+<div class="header" style="background-image:url({{background.fields.file.url}})">
+  <div class="content">
+    <img src="{{logo.fields.file.url}}" class="logo" />
+    <ul class="navigation">
+      {{#each links}}
+      <li>
+        <a href="{{fields.url}}">{{fields.title}}</a> |
+      </li>
+      {{/each}}
+      <li>
+        CART GOES HERE
+      </li>
+    </ul>
+    <a href="{{getStartedUrl}}">GET STARTED</a>
+    <ul class="social">
+      {{#each social}}
+      <li>
+        <a href="{{fields.link}}" target="_blank"><img src="{{fields.image.fields.file.url}}" /></a>
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+</div>
+{{/with}}

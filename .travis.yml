@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "6"
+install:
+  - npm install
+scripts:
+  - node build.js
+deploy:
+  - provider: s3
+    access_key_id: ""
+    secret_access_key: ""
+    skip_cleanup: true
+    local_dir: build
+    bucket: gochefit.scoble.tech
+    region: us-east-1
+    on:
+      branch: master
+  - provider: s3
+    access_key_id: ""
+    secret_access_key: ""
+    skip_cleanup: true
+    local_dir: build
+    bucket: gochefit.com
+    region: us-east-1
+    on:
+      branch: prod
