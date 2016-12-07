@@ -16,7 +16,7 @@ deploy:
 - provider: s3
   access_key_id: ''
   skip_cleanup: true
-  local_dir: build
+  local_dir: ./build
   bucket: gochefit.com
   region: us-east-1
   on:
