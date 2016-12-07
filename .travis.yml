@@ -30,7 +30,8 @@ notifications:
     on_success: always
     on_failure: change
     template:
-      - "%{build_url}"
-      - "%{commit_message}"
+    - "%{build_url}"
+    - "%{commit_message}"
+    - 'Change view: %{compare_url}'
     rooms:
-      secure: Q/crCjJUDSE7GE+R8+Lj2paYj/BOJIL+mdX90OFNOOVFiRry4FZXFiqRhIkxk3VUS2N8mdNu3LS7XeoTH+O9iYnx8o0iZrtbgqWxbyxqGZM23B42/RvUqw3gzWIx7UyZS2Y26lwcbTblvyNE20YWd1jzzTFTrV00W+yk0Dte0PC8x90tdlBEAnO5Sg6m2GmvuvNBJACOt8ScOZCre3kkK3pxG7Mb8uoEqJsZeuhBoptJdyVCQdm1vXWBj7YH9eb+RX/CWXtD81+h2Q7nmUNna7hDrXaQxKKEPyMgaSW9DlaeycwKD8n+wRi8C0v4N1f4OGwTHGtH1Z0QNT9hfyCR/smLP54OoAzcWPwZreUYXrf8d4Dtd61Cmka/K2+kjzSwlMJWwDwk/4EjlBC02diKpFwdn9xr3lZgce/+AYVnllK83jubipueOtTIopK3Qxmf1n32OVaWq2xuRsqqWTor3nALGdkeP0r5O36cZusz5juwi5WrbZT/YMWLUrMVdP7bIMFH9bof84LjvpLsnEofDs5zAD0ezZjI0oi+CaPLjxQJrJaP/U6uVId5mCZ+ADu+cqWMJMU0N5n2MZu2x5Rml7FnIcWfYtiUm3o1tZt7ziHlH5RuzrYJFyBLng/oAMbG0UyMp54B430x3/y589MT9KjqHwVi314x4rJKFklitzk=
+      secure: Vz85nyPqSkAfpP6Z881a3wdS9QjtNfn2vbl70tVb9G1zQf/8/6Mk/sfZlKEOU9mcxxlCU9DbJz0lC60j3LhNn0ORQhQqxpONKL/fo5WSOw0k8dah3v4Qbk03Gdo1m/3uYUBkfKTQASfHyWwqfpGMNuAxM7ZZsRAsHhSu55GU/rZbZLTwz0F8cjM9veCQO8oU+JSbRU4o2pM7o8+39pPmNhAI0AtE/FpvK0sKdE7Jiixf1h+iESDJZI7HvkgqQSYGt3Qmn/gHKaq44yo8YmLE0Fxavcj+AmT4bMMF+FzvMKvpyMpHHl2CD6oe7eqJ9qXT0bsKwoQ6MWDZz05cGyPgoMCiQWZbeyvKfJABH5gC0mjqfO2L/X5f2ewQxhSl7WlAcmvuBL+hd2T9MhbrGomEfR+HsMUuRBp8nBixzTjy5Te7+69V4NiSj66nSxV3m40tVIKj6SWtR13hl8CM6u9rKZScSxjPioB8kfuMuTHSbabzDSPhL13IvNOt+0CEpaViUKgtfwWZCmvCrl99HLp21nIjmFOzWXeKO8eilGfNODOV2akiqUDsFQD8frRUgxAVbaNqvrlNZUpJmqJThLXJsYR0nfR7e3KC0wWWUt5Ro53ffhDyzKh0vkw3gJilI62E9WeaXbeCk13ayJ5R0A3r3EB2BaEonIaoqsHRHSWeg8s=
