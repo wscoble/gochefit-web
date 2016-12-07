@@ -30,8 +30,7 @@ notifications:
     on_success: always
     on_failure: change
     template:
-      - "%{repository}@%{branch} (%{commit}) - %{build_url}"
-      - "Committed with: %{commit_message}"
-      - "%{message}"
+      - "%{build_url}"
+      - "%{commit_message}"
     rooms:
       secure: Q/crCjJUDSE7GE+R8+Lj2paYj/BOJIL+mdX90OFNOOVFiRry4FZXFiqRhIkxk3VUS2N8mdNu3LS7XeoTH+O9iYnx8o0iZrtbgqWxbyxqGZM23B42/RvUqw3gzWIx7UyZS2Y26lwcbTblvyNE20YWd1jzzTFTrV00W+yk0Dte0PC8x90tdlBEAnO5Sg6m2GmvuvNBJACOt8ScOZCre3kkK3pxG7Mb8uoEqJsZeuhBoptJdyVCQdm1vXWBj7YH9eb+RX/CWXtD81+h2Q7nmUNna7hDrXaQxKKEPyMgaSW9DlaeycwKD8n+wRi8C0v4N1f4OGwTHGtH1Z0QNT9hfyCR/smLP54OoAzcWPwZreUYXrf8d4Dtd61Cmka/K2+kjzSwlMJWwDwk/4EjlBC02diKpFwdn9xr3lZgce/+AYVnllK83jubipueOtTIopK3Qxmf1n32OVaWq2xuRsqqWTor3nALGdkeP0r5O36cZusz5juwi5WrbZT/YMWLUrMVdP7bIMFH9bof84LjvpLsnEofDs5zAD0ezZjI0oi+CaPLjxQJrJaP/U6uVId5mCZ+ADu+cqWMJMU0N5n2MZu2x5Rml7FnIcWfYtiUm3o1tZt7ziHlH5RuzrYJFyBLng/oAMbG0UyMp54B430x3/y589MT9KjqHwVi314x4rJKFklitzk=
