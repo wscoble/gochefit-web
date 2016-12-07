@@ -21,7 +21,7 @@ handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
 
 metalsmith(__dirname)
   .source('content')
-  .destination('/tmp/build')
+  .destination('build')
   .use(debug())
   .use(contentful({
     access_token: process.env.CONTENTFUL_ACCESS_TOKEN,
