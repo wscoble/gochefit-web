@@ -1,7 +1,5 @@
-var AWS = require('aws-sdk')
+module.exports = function(events) {
+  events.authenticated.add(function(credentials) {
 
-module.exports = function(signals) {
-  signals.authenticated.add(function(credentials) {
-    
   })
 }

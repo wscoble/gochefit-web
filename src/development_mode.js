@@ -1,7 +1,7 @@
-module.exports = function(signals) {
+module.exports = function(events) {
   console.log('======= DEVELOPMENT MODE ACTIVE =======')
-  Object.keys(signals).forEach(function(key) {
-    signals[key].add(function(d) {
+  Object.keys(events).forEach(function(key) {
+    events[key].add(function(d) {
       console.log('Caught signal: ' + key)
       console.log(d)
     })

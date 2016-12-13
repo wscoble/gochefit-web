@@ -1,7 +1,4 @@
 var React = require('react')
-var ReactDOM = require('react-dom')
-var AWS = require('aws-sdk')
-
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -12,7 +9,7 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     var self = this
-    this.props.signals.cartUpdated.add(function(cart) {
+    this.props.events.cartUpdated.add(function(cart) {
       self.setState({items: cart.totalItems})
     })
   },

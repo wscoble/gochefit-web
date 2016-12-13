@@ -8,17 +8,17 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 })
 
 
-module.exports = function(signals) {
+module.exports = function(events) {
   AWS.config.credentials.get(function() {
-    signals.authenticated.dispatch(AWS.config.credentials)
+    events.authenticated.dispatch(AWS.config.credentials)
 
     var syncClient = new AWS.CognitoSyncManager()
 
     syncClient.openOrCreateDataset('chefit', function(err, dataset) {
       if (err) {
-        signals.error.dispatch(err)
+        events.error.dispatch(err)
       } else {
-        signals.datasetOpened.dispatch(dataset)
+        events.datasetOpened.dispatch(dataset)
       }
     })
   })

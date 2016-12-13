@@ -3,7 +3,7 @@ var ReactDOM = require('react-dom')
 var React = require('react')
 
 
-module.exports = function(signals) {
-  ReactDOM.render(React.createElement(CartWidget, {signals: signals}),
+module.exports = function(events) {
+  ReactDOM.render(React.createElement(CartWidget, {events: events}),
                   document.getElementById('cart-widget'))
 }

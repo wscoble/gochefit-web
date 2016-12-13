@@ -1,17 +1,17 @@
 var Signal = require('signals').Signal
 
 module.exports = {
-  // User signals
+  // User events
   authenticated: new Signal(), // gets AWS.config.credentials
   datasetOpened: new Signal(), // gets the Cognito dataset
 
-  // Tracking signals
+  // Tracking events
 
 
-  // Cart signals
+  // Cart events
   cartUpdated: new Signal(), // gets cart object
 
-  // Payment signals
+  // Payment events
 
   // Error signal
   errored: new Signal(),
