@@ -25,6 +25,25 @@ handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
     }[operator];
 });
 
+handlebars.registerHelper("first_word", function(text) {
+  var parts = text.split(" ")
+  if (parts.length > 1) {
+    return parts[0]
+  } else {
+    return text
+  }
+})
+
+handlebars.registerHelper("sans_first_word", function(text) {
+  var parts = text.split(" ")
+  if (parts.length > 1) {
+    parts.shift()
+    return parts.join(" ")
+  } else {
+    return ""
+  }
+})
+
 metalsmith(__dirname)
   .source('content')
   .destination('build')

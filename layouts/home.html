@@ -35,7 +35,10 @@
       {{/each}}
     </div>
   </div>
-  <div id="aboutchef" class="section" style="display:none;">
+  <div id="aboutchef" class="section">
+    {{#with data.fields.aboutTheChef}}
+      {{> about_chef}}
+    {{/with}}
   </div>
   <div id="sendmessage" class="section" style="display:none;">
   </div>
