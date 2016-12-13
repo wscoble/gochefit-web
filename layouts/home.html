@@ -7,36 +7,38 @@
 <body class="homepage">
   {{> header }}
   <div id="hero" class="section">
-    <h1>{{data.fields.tagline}}</h1>
-    <a href="{{data.fields.getStartedUrl}}">Get Started</a>
+    <h1>{{#each data.fields.tagline}}<p>{{this}}</p>{{/each}}</h1>
+    {{> get_started}}
   </div>
   <div id="values" class="section">
     <h2>OUR VALUES</h2>
-    <ul>
+    <div class="content">
       {{#each data.fields.values}}
-        <li>
-          {{> value }}
-        </li>
+      <hr/>
+          <div class="value">{{> value }}</div>
       {{/each}}
-    </ul>
+      <hr/>
+    </div>
   </div>
-  <div id="howitworks" class="section">
+  <div id="howitworks" class="section" style="display:none;">
     <h2>HOW IT WORKS</h2>
     {{#each data.fields.howItWorks}}
       {{> howitworks }}
     {{/each}}
     <div class="clearfix"></div>
   </div>
-  <div id="cta" class="section">
+  <div id="cta" class="section" style="display:none;">
     {{#each data.fields.callToActions}}
       {{> calltoaction }}
     {{/each}}
     <div class="clearfix"></div>
   </div>
-  <div id="aboutchef" class="section">
+  <div id="aboutchef" class="section" style="display:none;">
   </div>
-  <div id="sendmessage" class="section">
+  <div id="sendmessage" class="section" style="display:none;">
   </div>
   {{> footer }}
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>

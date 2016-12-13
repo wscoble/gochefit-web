@@ -28,10 +28,11 @@ env:
 notifications:
   slack:
     on_success: always
-    on_failure: change
+    on_failure: always
     template:
-    - "%{build_url}"
-    - "%{commit_message}"
-    - 'Change view: %{compare_url}'
+      - "https://github.com/%{repository_slug}"
+      - "%{build_url}"
+      - "%{commit_message}"
+      - 'Change view: %{compare_url}'
     rooms:
       secure: YK15DMSwKBTO/awEHJ6ljWkRJvXWreJa5++52cqHk0eIii7/jJLgJ5BTPGn+Ied43qzQTq/xkbywcVmwNBuPDUtbJCh6q9c8SjDJeD+2szvZZRhN0Nx/nKUHXP7YfKYAYVyEWx7YcpcKao+FhpKpU7Lg3YWweysJmy3knUcetakWflCTLWTir0wKvsLVBwd1tBSbbMDDk1COK1KQtGqZzo55J9B7arvHp0NmWDb5TAR4br03vswizPxY1tylpXvUrIcQwU1aRlpdOQgzustLKKRRetBStd5rkqHvPoYiFb7ukokqB5uiFy7uLlYDvg/zUhOTOWj0r/sVvK/1gjYOQWY9owuCV5Et32ESuN1lMkrAYFgBQALEcjxO5rdt0AlrBlgpSoK2R9gFPaqsDyonpwqLFmpD645+ZNh2kUb4C22KgyCJsbXKnlDzdtRi7yddyl3piCU8k6MwLF2ayvvqKELAKli7LXxZgye58UYXoKU2DcbFVIu5WajwPGf2cbZieaTjtJEfcpUGBez8ZB1LuDKB7AMcOfIYRjXgzcv41dad1773VqV6qtPhZQXBKpWy3KMHtuaot6pOkTYpSi0NUZRZVuw+uKvm8i4bqrJD1vb6kg8SQ5lOPOYdMKgZIUjwEGYkXcLVDhuhOQ+hewfeubu8oG0cckaGe/6LOY7Ut3Y=
