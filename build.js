@@ -10,6 +10,7 @@ var handlebars = require('handlebars')
 var browserify = require('metalsmith-browserify')
 var envify = require('envify')
 var reactify = require('reactify')
+var uglify = require('metalsmith-uglifyjs')
 
 handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
     lvalue = parseFloat(lvalue);
@@ -53,6 +54,17 @@ metalsmith(__dirname)
     './src/index.js'
   ], {
     transform: [envify, reactify]
+  }))
+  .use(uglify({
+    src: ['**/*.js','!**/*.min.js'],
+    deleteSources: true,
+    uglifyOptions: {
+      mangle: false,
+      compress: {
+        unused: true,
+        warnings: true
+      }
+    }
   }))
   .build(function(err) {
     if (err) {
