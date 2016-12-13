@@ -59,10 +59,10 @@ metalsmith(__dirname)
     src: ['**/*.js','!**/*.min.js'],
     deleteSources: true,
     uglifyOptions: {
-      mangle: false,
+      mangle: true,
       compress: {
         unused: true,
-        warnings: true
+        warnings: false
       }
     }
   }))
