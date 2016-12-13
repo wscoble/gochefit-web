@@ -1,6 +1,11 @@
-<div class="tile" style="{{#with fields.background.fields.file}}background-image:url({{url}}); width:{{details.image.width}}px; height:{{details.image.height}}px;{{/with}}">
-  <span class="title">{{fields.title}}</span>
-  <span class="separator"></span>
-  <span class="content" style="width:{{math fields.background.fields.file.details.image.width "-" 50}}px">{{fields.content}}</span>
-  <a href="{{fields.actionUrl}}" class="button">{{fields.actionLabel}}</a>
+<div class="tile" style="{{#with fields.background.fields.file}}background-image:url({{url}});{{/with}}">
+  <span class="title">{{fields.title}}<span class="separator"></span></span>
+  <span class="content">{{fields.content}}</span>
+  <span class="get-started-link">
+    <div class="get-started">
+      <span class="wrapper">
+        <a href="{{getStartedUrl}}">{{fields.actionLabel}}</a>
+      </span>
+    </div>
+  </span>
 </div>

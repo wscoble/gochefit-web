@@ -23,7 +23,7 @@ body {
 }
 
 h2 {
-  font-size: 24px;
+  font-size: 32px;
 }
 
 .header {
@@ -151,12 +151,12 @@ h2 {
 
   h1 {
     margin-top: 196px;
-    font-size: 72px;
+    font-size: 88px;
   }
 
   .get-started {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 56px;
 
     .wrapper {
       padding: 14px 6px;
@@ -255,26 +255,61 @@ h2 {
       position: absolute;
       top: 120px;
       left: 25px;
+      text-align: left;
     }
   }
 }
 
 #cta {
+  margin-top: 170px;
   width: 100%;
 
+  .center {
+    margin: 0 auto;
+    display: inline-block;
+  }
+
   .tile {
-    float:left;
     color: white;
+    margin: 0 40px;
     position: relative;
-    margin: 0 20px;
+    float: left;
+    width: 460px;
+    height: 460px;
+    background-size: cover;
 
     .title {
       position: absolute;
-      font-size: 30px;
+      left: 0;
+      bottom: 300px;
+      text-align: center;
+      width: 100%;
+      font-size: 32px;
+
+      .separator {
+        position: absolute;
+        left: 0;
+        bottom: -14px;
+        width: 20%;
+        margin-left: 40%;
+        border-bottom: solid white 4px;
+      }
+    }
+
+    .content {
+      width: 80%;
+      margin-left: 10%;
+      position: absolute;
+      bottom: 120px;
+      left: 0;
+    }
+
+    .get-started-link {
+      position: absolute;
+      bottom: 30px;
+      left: 0;
       width: 100%;
       text-align: center;
-      left: 0;
-      top: 120px;
     }
   }
 }
