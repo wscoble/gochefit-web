@@ -20,12 +20,13 @@
       <hr/>
     </div>
   </div>
-  <div id="howitworks" class="section" style="display:none;">
+  <div id="howitworks" class="section">
     <h2>HOW IT WORKS</h2>
-    {{#each data.fields.howItWorks}}
-      {{> howitworks }}
-    {{/each}}
-    <div class="clearfix"></div>
+    <div class="center">
+      {{#each data.fields.howItWorks}}
+        {{> howitworks }}
+      {{/each}}
+    </div>
   </div>
   <div id="cta" class="section" style="display:none;">
     {{#each data.fields.callToActions}}

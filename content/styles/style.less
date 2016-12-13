@@ -1,11 +1,29 @@
 @import "content/styles/reset";
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #eddbc1;
   background-image: url(/assets/wood-bg.jpg);
   background-repeat: repeat-y;
   background-position: center;
   padding-top: 100px;
+  position: relative;
+  margin: 0;
+  padding-bottom: 120px;
+  min-height: 100%;
+}
+
+h2 {
+  font-size: 24px;
 }
 
 .header {
@@ -15,49 +33,12 @@ body {
   top: 0;
   position: fixed;
   background-position: bottom;
+  z-index: 100;
 
   .logo {
     position: absolute;
     left: 50px;
     top: 25px;
-  }
-
-  .navigation {
-    position: absolute;
-    left: 20%;
-    top: 39px;
-
-    width: 100%;
-
-    font-size: 16px;
-    font-family: serif;
-
-    .wrapper:before {
-      content: '|';
-      color: #c7c7c7;
-    }
-
-    .wrapper:last-of-type:after {
-      content: '|';
-      color: #c7c7c7;
-    }
-
-    .wrapper {
-      width: 150px;
-
-      a {
-        color: #232323;
-        text-align: center;
-        letter-spacing: 1px;
-        padding: 6px 20px;
-        margin: 0 10px;
-          opacity: .6;
-      }
-
-      a:hover {
-        opacity: 1;
-      }
-    }
   }
 
   #cart-widget {
@@ -82,6 +63,44 @@ body {
     position: absolute;
     right: 1%;
     top: 36px;
+  }
+}
+
+.navigation {
+  position: absolute;
+  left: 20%;
+  top: 39px;
+
+  width: 100%;
+
+  font-size: 16px;
+  font-family: serif;
+
+  .wrapper:before {
+    content: '|';
+    color: #c7c7c7;
+  }
+
+  .wrapper:last-of-type:after {
+    content: '|';
+    color: #c7c7c7;
+  }
+
+  .wrapper {
+    width: 150px;
+
+    a {
+      color: #232323;
+      text-align: center;
+      letter-spacing: 1px;
+      padding: 6px 20px;
+      margin: 0 10px;
+      opacity: .6;
+    }
+
+    a:hover {
+      opacity: 1;
+    }
   }
 }
 
@@ -128,26 +147,32 @@ body {
 }
 
 #hero {
+  margin: 0 auto;
 
   h1 {
-    font-size: 66px;
-    position: relative;
-    top: 196px;
+    margin-top: 196px;
+    font-size: 72px;
   }
 
   .get-started {
-    top: 272px;
     width: 100%;
+    margin-top: 20px;
+
+    .wrapper {
+      padding: 14px 6px;
+
+      a {
+        padding: 8px 34px;
+      }
+    }
   }
 }
 
 #values {
-  position: relative;
-  top: 400px;
+  margin-top: 120px;
   background: url(/assets/values-bg.png) center no-repeat;
 
   h2 {
-    font-size: 24px;
     margin-bottom: 30px;
   }
 
@@ -182,10 +207,10 @@ body {
 
 #howitworks {
   width: 100%;
+  margin-top: 170px;
 
   h2 {
-    margin: 0 auto;
-    display: block;
+    margin-bottom: 30px;
   }
 
   .tile:not(:last-child)::after {
@@ -195,11 +220,16 @@ body {
     top: 100px;
   }
 
+  .center {
+    margin: 0 auto;
+    display: inline-block;
+  }
+
   .tile {
-    float: left;
     color: white;
-    position: relative;
     margin: 0 20px;
+    position: relative;
+    float: left;
 
     .number {
       font-size: 95px;
@@ -264,5 +294,31 @@ body {
 
   label {
     padding-left: 8px;
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 120px;
+  background-color: #312a3d;
+  padding: 0;
+  margin: 0;
+
+  .navigation {
+    left: 120px;
+    top: 50px;
+    a {
+      color: white;
+    }
+  }
+  .copyright {
+    position: absolute;
+    right: 120px;
+    top:50px;
+    color: white;
+    opacity: .6;
   }
 }

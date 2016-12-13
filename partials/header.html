@@ -2,15 +2,7 @@
 <div class="header" style="background-image:url({{background.fields.file.url}})">
   <div class="content">
     <img src="{{logo.fields.file.url}}" class="logo" />
-
-    <span class="navigation">
-      {{#each links}}
-      <span class="wrapper">
-        <a class="link" href="{{fields.url}}">{{fields.title}}</a>
-      </span>
-      {{/each}}
-    </span>
-
+    {{> navigation}}
     <span id="cart-widget">
       <img src="/assets/cart.png" />
     </span>
