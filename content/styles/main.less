@@ -386,6 +386,7 @@ h2 {
       width: 614px;
       line-height: 20px;
       text-align: left;
+      height: 130px;
     }
   }
 
@@ -394,6 +395,138 @@ h2 {
     left: 0;
     top: 140px;
     z-index: 50;
+  }
+}
+
+#sendmessage {
+  height: 700px;
+  margin-top: 100px;
+  position: relative;
+
+  .center {
+    margin: 0 auto;
+    display: inline-block;
+    width: 910px;
+    position: relative;
+  }
+
+  .content {
+    position: absolute;
+    width: 910px;
+    height: 546px;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    h2 {
+      position: absolute;
+      left: 0;
+      top: 70px;
+      width: 100%;
+      text-align: center;
+      color: white;
+    }
+
+    #message-widget {
+      position: absolute;
+      left: 170px;
+      right: 170px;
+      top: 150px;
+      margin: 0 auto;
+
+      .message-widget {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        [name=name] {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 275px;
+          padding: 16px;
+          font-family: serif;
+        }
+        [name=email] {
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 275px;
+          padding: 16px;
+          font-family: serif;
+        }
+        [name=message] {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 73px;
+          width: 570px;
+          height: 138px;
+          padding: 16px;
+          font-family: serif;
+        }
+        .send-message-wrapper {
+          position: relative;
+          top: 240px;
+          left: 0;
+
+          .wrapper {
+            border: #6f9f27 solid 3px;
+            border-radius: 3px;
+            background-color: #6f9f27;
+            padding: 6px 4px;
+            white-space: nowrap;
+
+            a {
+              border: #84b33d solid 1px;
+              color: #e8f1d9;
+              text-align: center;
+              font-size: 12px;
+              font-family: serif;
+              padding: 4px 8px;
+              letter-spacing: 3px;
+              display: inline-block;
+              white-space: nowrap;
+              top: -1px;
+              position: relative;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .location {
+      position: absolute;
+      left: 186px;
+      top: 458px;
+      font-size: 14px;
+      color: white;
+    }
+
+    .location:before {
+      content: url(/assets/location-icon.png);
+      position: relative;
+      left: -11px;
+      top: 3px;
+    }
+
+    .phone-number {
+      position: absolute;
+      right: 186px;
+      top: 458px;
+      font-size: 14px;
+      color: white;
+      a {
+        color: white;
+      }
+    }
+
+    .phone-number:before {
+      content: url(/assets/phone-icon.png);
+      position: relative;
+      left: -11px;
+      top: 3px;
+    }
   }
 }
 

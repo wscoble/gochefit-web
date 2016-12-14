@@ -1,5 +1,6 @@
 var events = require('./events')
 var cart = require('./cart')(events)
+var messaging = require('./messaging')(events)
 var payments = require('./payments')(events)
 var tracking = require('./tracking')(events)
 var aws = require('./aws')(events)

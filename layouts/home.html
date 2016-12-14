@@ -40,8 +40,19 @@
       {{> about_chef}}
     {{/with}}
   </div>
-  <div id="sendmessage" class="section" style="display:none;">
+  <div id="sendmessage" class="section">
+    <div class="center">
+      {{#with data.fields.sendMessage.fields}}
+      <div class="content" style="background-image: url({{background.fields.file.url}});">
+        <h2>HUNGRY FOR MORE?</h2>
+        <span id="message-widget" data-button-text="{{actionLabel}}"></span>
+        <span class="location"><strong>Our Location: </strong>{{location}}</span>
+        <span class="phone-number"><strong>Phone: </strong><a href="tel:+1{{phoneNumber}}">{{phoneNumber}}</a></span>
+      </div>
+      {{/with}}
+    </div>
   </div>
+  <div class="section"></div>
   {{> footer }}
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="/js/app.min.js"></script>

@@ -10,6 +10,8 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 
 module.exports = function(events) {
   AWS.config.credentials.get(function() {
+    var lambda = new AWS.Lambda()
+
     events.authenticated.dispatch(AWS.config.credentials)
 
     var syncClient = new AWS.CognitoSyncManager()
@@ -20,6 +22,26 @@ module.exports = function(events) {
       } else {
         events.datasetOpened.dispatch(dataset)
       }
+    })
+
+    events.messageSendRequested.add(function(name, email, message) {
+      var params = {
+        FunctionName: 'MessageSender',
+        InvocationType: 'RequestResponse',
+        Payload: JSON.stringify({
+          name: name,
+          email: email,
+          message:message
+        })
+      }
+
+      lambda.invoke(params, function(err, data) {
+        if (err) {
+          events.messageSendFailed.dispatch(err)
+        } else {
+          events.messageSent.dispatch(data)
+        }
+      })
     })
   })
 }

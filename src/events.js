@@ -4,6 +4,9 @@ module.exports = {
   // User events
   authenticated: new Signal(), // gets AWS.config.credentials
   datasetOpened: new Signal(), // gets the Cognito dataset
+  messageSendRequested: new Signal(), // gets name, email, message
+  messageSent: new Signal(), // gets a success message
+  messageSendFailed: new Signal(), // gets an error message
 
   // Tracking events
 
