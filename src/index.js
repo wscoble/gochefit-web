@@ -1,4 +1,5 @@
 var events = require('./events')
+var loading = require('./loading')(events)
 var cart = require('./cart')(events)
 var messaging = require('./messaging')(events)
 var payments = require('./payments')(events)
