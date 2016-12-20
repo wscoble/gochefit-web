@@ -14,10 +14,12 @@ module.exports = {
 
 
   // Tracking events
+  track: new Signal(), // gets (data-title, event-name)
 
 
   // Cart events
   cartUpdated: new Signal(), // gets cart object
+  cartItemAdded: new Signal(), // gets a cart item
 
 
   // Payment events

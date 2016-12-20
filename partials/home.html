@@ -2,7 +2,8 @@
   <h1>{{#each data.fields.tagline}}<p>{{this}}</p>{{/each}}</h1>
   {{> get_started}}
 </div>
-<div id="values" class="section">
+{{> loading }}
+<div id="values" class="section" data-title="values">
   <h2>OUR VALUES</h2>
   <div class="content">
     {{#each data.fields.values}}
@@ -12,7 +13,7 @@
     <hr/>
   </div>
 </div>
-<div id="howitworks" class="section">
+<div id="howitworks" class="section" data-title="how it works">
   <h2>HOW IT WORKS</h2>
   <div class="center">
     {{#each data.fields.howItWorks}}
@@ -27,12 +28,12 @@
     {{/each}}
   </div>
 </div>
-<div id="aboutchef" class="section">
+<div id="aboutchef" class="section" data-title="about the chef">
   {{#with data.fields.aboutTheChef}}
     {{> about_chef}}
   {{/with}}
 </div>
-<div id="sendmessage" class="section">
+<div id="sendmessage" class="section" data-title="messaging widget">
   <div class="center">
     {{#with data.fields.sendMessage.fields}}
     <div class="content" style="background-image: url({{background.fields.file.url}});">
