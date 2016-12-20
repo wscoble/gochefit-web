@@ -1,0 +1,17 @@
+<div class="menu-wrapper">
+  <h1>MENU</h1>
+  {{#each data.entries}}
+  <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
+    <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
+    <div class="content">
+      <div class="title">{{fields.name}}<span class="separator"></span></div>
+      <div class="short-description">{{fields.shortDescription}}</div>
+      <div class="get-started">
+        <span class="wrapper">
+          <a href="/{{_fileName}}">ORDER IT</a>
+        </span>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
