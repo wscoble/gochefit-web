@@ -44,6 +44,10 @@ handlebars.registerHelper("sans_first_word", function(text) {
   }
 })
 
+handlebars.registerHelper("toJSON", function(value) {
+  return JSON.stringify(value)
+})
+
 metalsmith(__dirname)
   .source('content')
   .destination('build')
@@ -58,6 +62,9 @@ metalsmith(__dirname)
           'sys.id[in]': process.env.CONTENTFUL_HEADER_ID
         }
       }
+    },
+    filterTransforms: {
+      include: 10
     }
   }))
   .use(layouts({

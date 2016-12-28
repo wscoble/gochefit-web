@@ -8,6 +8,17 @@
 </head>
 <body class="homepage">
   {{> header }}
+
+  <div class="menu-item">
+    {{#with data.fields}}
+    <h1>{{name}}</h1>
+    <div class="thumbnail"><img src="{{tileColorBackground.fields.file.url}}" /></div>
+    <div id="price-cart-widget"
+         data-base-price="{{basePrice}}"
+         data-options="{{toJSON options}}"></div>
+    {{/with}}
+  </div>
+
   {{> footer }}
   <script src="/js/app.min.js"></script>
 </body>
