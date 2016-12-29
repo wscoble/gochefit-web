@@ -680,6 +680,7 @@ h2 {
   padding-top: 40px;
   text-align: center;
   position: relative;
+  max-width: 1176px;
 
   h1 {
     font-size: 72px;
@@ -697,7 +698,7 @@ h2 {
 
   #slides {
     display: none;
-    width: 642px;
+    width: 440px;
     position: absolute;
     left: 0px;
     top: 214px;
@@ -709,6 +710,61 @@ h2 {
 
     .slidesjs-container {
       height: 642px;
+
+      img {
+        z-index: 5 !important;
+      }
     }
   }
+
+  .price {
+    width: 280px;
+    height: 94px;
+    background-image: url(/assets/price-bg.png);
+    font-size: 42px;
+    color: white;
+    position: absolute;
+    top: 183px;
+    left: 374px;
+    padding-top: 19px;
+    padding-right: 37px;
+    text-align: right;
+    z-index: -1;
+    letter-spacing: -2px;
+
+  }
+
+  .get-started {
+    top: 628px;
+    left: 604px;
+    position: absolute;
+
+    a {
+      cursor: pointer;
+    }
+  }
+
+  .quantity {
+    position: absolute;
+    top: 593px;
+    left: 516px;
+    font-size: 42px;
+    color: #927b60;
+    text-align: center;
+    width: 64px;
+
+    img {
+      display: block;
+      width: 19px;
+      height: 23px;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+  }
+}
+
+.menu-page {
+  background-image: url('/assets/menu-item-bg.png');
+  background-color: #ffffff;
+  background-repeat: no-repeat;
 }

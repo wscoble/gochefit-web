@@ -45,6 +45,14 @@ module.exports = function(events) {
       }
     })
 
+    syncClient.openOrCreateDataset('cart', function(err, dataset) {
+      if (err) {
+        events.errored.dispatch(err)
+      } else {
+        events.cartDatasetOpened.dispatch(dataset)
+      }
+    })
+
     // Message events
 
     events.messageSendRequested.add(function(name, email, message) {

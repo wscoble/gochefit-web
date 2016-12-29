@@ -6,7 +6,7 @@
   {{> metadata }}
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 </head>
-<body class="homepage">
+<body class="menu-page">
   {{> header }}
 
   <div class="menu-item section">
@@ -19,7 +19,8 @@
     </div>
     <div id="price-cart-widget"
          data-base-price="{{basePrice}}"
-         data-options="{{toJSON options}}"></div>
+         data-options="{{toJSON options}}"
+         data-name="{{name}}"></div>
     {{/with}}
   </div>
 

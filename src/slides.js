@@ -14,8 +14,8 @@ module.exports = function(events) {
       },
       play: {
         active: false,
-        effect: "fade",
-        interval: 5000,
+        effect: "slide",
+        interval: 7500,
         auto: true,
         pauseOnHover: true,
         restartDelay: 2500,
