@@ -589,7 +589,7 @@ h2 {
   h1 {
     font-size: 72px;
     margin-bottom: 35px;
-    
+
     &:before, &:after {
       display: inline-block;
       border-top: solid black 1px;
@@ -670,6 +670,45 @@ h2 {
       .get-started {
         top: 75%;
       }
+    }
+  }
+}
+
+.menu-item {
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 40px;
+  text-align: center;
+  position: relative;
+
+  h1 {
+    font-size: 72px;
+    margin-bottom: 35px;
+
+    &:before, &:after {
+      display: inline-block;
+      border-top: solid black 1px;
+      width: 20%;
+      margin: 0 30px;
+      padding: 10px;
+      content: " "
+    }
+  }
+
+  #slides {
+    display: none;
+    width: 642px;
+    position: absolute;
+    left: 0px;
+    top: 214px;
+
+    a {
+      position: relative;
+      top: 0;
+    }
+
+    .slidesjs-container {
+      height: 642px;
     }
   }
 }

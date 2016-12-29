@@ -6,6 +6,7 @@ var messaging = require('./messaging')(events)
 var payments = require('./payments')(events)
 var tracking = require('./tracking')(events)
 var aws = require('./aws')(events)
+var slides = require('./slides')(events)
 
 if (process.env.DEVELOPMENT === '1') {
   require('./development_mode')(events)

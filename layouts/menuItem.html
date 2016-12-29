@@ -9,10 +9,14 @@
 <body class="homepage">
   {{> header }}
 
-  <div class="menu-item">
+  <div class="menu-item section">
     {{#with data.fields}}
     <h1>{{name}}</h1>
-    <div class="thumbnail"><img src="{{tileColorBackground.fields.file.url}}" /></div>
+    <div id="slides" data-width="642" data-height="642">
+      {{#each images}}
+      <img src="{{fields.file.url}}" />
+      {{/each}}
+    </div>
     <div id="price-cart-widget"
          data-base-price="{{basePrice}}"
          data-options="{{toJSON options}}"></div>
