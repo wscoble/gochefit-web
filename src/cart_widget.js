@@ -57,6 +57,12 @@ module.exports = function(events) {
               events.errored.dispatch(err)
             } else {
               events.debug.dispatch(record, 'updated-cart')
+              events.cartUpdated.dispatch({totalItems: items.map(function(item) {
+                                                         return item.quantity
+                                                       }).reduce(function(a, b) {
+                                                         return a + b
+                                                       }, 0)})
+
             }
           })
         }
