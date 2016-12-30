@@ -35,7 +35,7 @@ module.exports = function(events) {
             cart.push(item)
           }
 
-          dataset.put('items', JSON.stringify(items), function(err, record) {
+          dataset.put('items', JSON.stringify(cart), function(err, record) {
             if (err) {
               events.errored.dispatch(err)
             } else {

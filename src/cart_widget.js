@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom')
 var React = require('react')
 
 
-module.exports = function(events) {  
+module.exports = function(events) {
   var cartWidgetElement = document.getElementById('cart-widget')
 
   if (!!cartWidgetElement) {
@@ -17,12 +17,19 @@ module.exports = function(events) {
 
   if (!!priceCartWidgetElement) {
     var basePrice = priceCartWidgetElement.getAttribute('data-base-price')
-    var options = JSON.parse(priceCartWidgetElement.getAttribute('data-options'))
     var name = priceCartWidgetElement.getAttribute('data-name')
+    var options = {}, macros = {}
+    if (priceCartWidgetElement.getAttribute('data-options') !== '') {
+      options = JSON.parse(priceCartWidgetElement.getAttribute('data-options'))
+    }
+    if (priceCartWidgetElement.getAttribute('data-macros') !== '') {
+      macros = JSON.parse(priceCartWidgetElement.getAttribute('data-macros'))
+    }
 
     ReactDOM.render(React.createElement(PriceCartWidget, {events: events,
                                                           basePrice: basePrice,
                                                           options: options,
+                                                          macros: macros,
                                                           name: name}),
                     priceCartWidgetElement)
   }
