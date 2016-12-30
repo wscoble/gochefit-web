@@ -20,11 +20,25 @@
     <div id="price-cart-widget"
          data-base-price="{{basePrice}}"
          data-options="{{toJSON options}}"
-         data-name="{{name}}"></div>
+         data-name="{{name}}">
+    </div>
+    <div class="ingredients">
+      <h2>INGREDIENTS</h2>
+      {{#each ingredients}}
+      <p>{{this}}</p>
+      {{/each}}
+    </div>
+    <div class="macros">
+      <h2>MACROS</h2>
+      {{#eachJSON macros}}
+      <p><span class="name">{{key}}</span><span class="value">{{value}}</span></p>
+      {{/eachJSON}}
+    </div>
     {{/with}}
   </div>
 
   {{> footer }}
+  {{> acceptjs }}
   <script src="/js/app.min.js"></script>
 </body>
 </html>

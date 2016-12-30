@@ -1,25 +1,52 @@
+var Accept = window.Accept || {}
+var helpers = require('./helpers')
+
 module.exports = function(events) {
-  // Once we have a dataset
   events.cartDatasetOpened.add(function(dataset) {
-    // set up dataset items
-    dataset.get('items', function(err, value) {
+    dataset.get('items', function(err, cart) {
       if (err) {
         events.errored.dispatch(err)
-      } else {
-        var items = JSON.parse(value)
-        if (value) {
-          events.cartUpdated.dispatch({totalItems: items.map(function(item) {
-                                                     return item.quantity
-                                                   }).reduce(function(a, b) {
-                                                     return a + b
-                                                   }, 0)})
-        }
+      } else if (cart) {
+        events.cartUpdated.dispatch({totalItems: helpers.getItemCountFromCart(cart)})
       }
     })
 
-    // When an item is added to the cart
-    events.cartItemAdded.add(function (item) {
+    // wire up cart events
+    events.cartItemAdded.add(function(item) {
+      dataset.get('items', function(err, value) {
+        if (err) {
+          events.errored.dispatch(err)
+        } else {
+          var cart = []
+          if (value) {
+            cart = JSON.parse(value)
 
+            // update quantity if item already exists in cart
+            itemsHashes = cart.map(function(i) {
+              return i.hash
+            })
+            var hashIndex = itemsHashes.indexOf(item.hash)
+            if (hashIndex > -1) {
+              items[hashIndex].quantity += item.quantity
+            } else {
+              cart.push(item)
+            }
+          } else {
+            cart.push(item)
+          }
+
+          dataset.put('items', JSON.stringify(items), function(err, record) {
+            if (err) {
+              events.errored.dispatch(err)
+            } else {
+              dataset.synchronize()
+              events.debug.dispatch(record, 'updated-cart')
+              events.cartUpdated.dispatch({totalItems: helpers.getItemCountFromCart(cart)})
+
+            }
+          })
+        }
+      })
     })
   })
 }

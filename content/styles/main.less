@@ -677,23 +677,24 @@ h2 {
 .menu-item {
   width: 90%;
   margin: 0 auto;
-  padding-top: 40px;
+  padding-top: 10px;
   text-align: center;
   position: relative;
-  max-width: 1176px;
+  max-width: 1200px;
 
   h1 {
-    font-size: 72px;
-    margin-bottom: 35px;
+    font-size: 64px;
+    margin-bottom: 10px;
 
-    &:before, &:after {
-      display: inline-block;
-      border-top: solid black 1px;
-      width: 20%;
-      margin: 0 30px;
-      padding: 10px;
-      content: " "
-    }
+    // TODO: fix this before go live
+    // &:before, &:after {
+    //   display: inline-block;
+    //   border-top: solid black 1px;
+    //   width: 20%;
+    //   margin: 0 30px;
+    //   padding: 6px;
+    //   content: " "
+    // }
   }
 
   #slides {
@@ -702,6 +703,7 @@ h2 {
     position: absolute;
     left: 0px;
     top: 214px;
+    top: 168px;
 
     a {
       position: relative;
@@ -724,7 +726,7 @@ h2 {
     font-size: 42px;
     color: white;
     position: absolute;
-    top: 183px;
+    top: 137px;
     left: 374px;
     padding-top: 19px;
     padding-right: 37px;
@@ -759,6 +761,48 @@ h2 {
       height: 23px;
       cursor: pointer;
       margin: 0 auto;
+    }
+  }
+
+  .ingredients {
+    position: absolute;
+    left: 516px;
+    top: 262px;
+    text-align: left;
+
+    h2 {
+      font-size: 24px;
+      color: #444444;
+      padding-bottom: 22px;
+    }
+
+    p {
+      padding:4px 0;
+    }
+  }
+  .macros {
+    position: absolute;
+    left: 816px;
+    top: 262px;
+    text-align: left;
+    width: 260px;
+
+    h2 {
+      font-size: 24px;
+      color: #444444;
+      padding-bottom: 22px;
+    }
+
+    p {
+      padding:4px 0;
+    }
+
+    .name {
+
+    }
+    .value {
+      float: right;
+      text-align: right;
     }
   }
 }

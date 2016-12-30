@@ -48,6 +48,36 @@ handlebars.registerHelper("toJSON", function(value) {
   return JSON.stringify(value)
 })
 
+handlebars.registerHelper('eachJSON', function(context, options) {
+  if (!!context) {
+    var ret = "";
+
+    for (var key in context) {
+      if (context.hasOwnProperty(key)) {
+        ret = ret + options.fn({key: key, value: context[key]})
+      }
+    }
+
+    for(var i=0, j=context.length; i<j; i++) {
+      ret = ret + options.fn(c[i]);
+    }
+
+    return ret;
+  } else {
+    return ''
+  }
+});
+
+var acceptjs
+
+if (process.env.DEVELOPMENT) {
+  acceptjs = '<script type="text/javascript" src="https://jstest.authorize.net/v1/Accept.js" charset="utf-8"></script>'
+} else {
+  acceptjs = '<script type="text/javascript" src="https://js.authorize.net/v1/Accept.js" charset="utf-8"></script>'
+}
+
+handlebars.registerPartial('acceptjs', acceptjs)
+
 metalsmith(__dirname)
   .source('content')
   .destination('build')

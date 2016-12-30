@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom')
 var React = require('react')
 
 
-module.exports = function(events) {
+module.exports = function(events) {  
   var cartWidgetElement = document.getElementById('cart-widget')
 
   if (!!cartWidgetElement) {
@@ -26,47 +26,4 @@ module.exports = function(events) {
                                                           name: name}),
                     priceCartWidgetElement)
   }
-
-  // wire up cart events
-  events.cartDatasetOpened.add(function(dataset) {
-    events.cartItemAdded.add(function(item) {
-      dataset.get('items', function(err, value) {
-        if (err) {
-          events.errored.dispatch(err)
-        } else {
-          var items = []
-          if (value) {
-            items = JSON.parse(value)
-
-            // update quantity if item already exists in cart
-            itemsHashes = items.map(function(i) {
-              return i.hash
-            })
-            var hashIndex = itemsHashes.indexOf(item.hash)
-            if (hashIndex > -1) {
-              items[hashIndex].quantity += item.quantity
-            } else {
-              items.push(item)
-            }
-          } else {
-            items.push(item)
-          }
-
-          dataset.put('items', JSON.stringify(items), function(err, record) {
-            if (err) {
-              events.errored.dispatch(err)
-            } else {
-              events.debug.dispatch(record, 'updated-cart')
-              events.cartUpdated.dispatch({totalItems: items.map(function(item) {
-                                                         return item.quantity
-                                                       }).reduce(function(a, b) {
-                                                         return a + b
-                                                       }, 0)})
-
-            }
-          })
-        }
-      })
-    })
-  })
 }

@@ -16,7 +16,7 @@ var analyticsOptions = {
 module.exports = function(events) {
   AWS.config.credentials.get(function() {
     var lambda = new AWS.Lambda()
-    events.authenticated.dispatch(AWS.config.credentials)
+    events.debug.dispatch(AWS.config.credentials)
 
     // Analytics setup
 
