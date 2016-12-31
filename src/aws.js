@@ -1,7 +1,3 @@
-var AWS = require('aws-sdk')
-require('amazon-cognito-js')
-require('aws-sdk-mobile-analytics')
-
 AWS.config.region = process.env.AWS_REGION
 
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({

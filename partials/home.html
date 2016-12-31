@@ -1,3 +1,6 @@
+<div class="top-bg">
+  <img src="/assets/top-bg.jpg" class="top-bg" />
+</div>
 <div id="hero" class="section">
   <h1>{{#each data.fields.tagline}}<p>{{this}}</p>{{/each}}</h1>
   {{> get_started}}
@@ -32,6 +35,9 @@
   {{#with data.fields.aboutTheChef}}
     {{> about_chef}}
   {{/with}}
+</div>
+<div class="messaging-bg">
+  <img src="/assets/messaging-bg.jpg" class="messaging-bg" />
 </div>
 <div id="sendmessage" class="section" data-title="messaging widget">
   <div class="center">

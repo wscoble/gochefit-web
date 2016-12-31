@@ -27,7 +27,7 @@ module.exports = function(events) {
             })
             var hashIndex = itemsHashes.indexOf(item.hash)
             if (hashIndex > -1) {
-              items[hashIndex].quantity += item.quantity
+              cart[hashIndex].quantity += item.quantity
             } else {
               cart.push(item)
             }

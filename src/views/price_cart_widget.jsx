@@ -8,16 +8,14 @@ module.exports = React.createClass({
       quantity: 1,
       selectedOptions: {},
       addMessage: 'ADD TO CART',
-      macros: {},
       adjustments: {},
     }
   },
 
   componentDidMount: function() {
-    this.setState({macros: this.props.macros})
-
     var self = this
     var options = this.props.options
+
     for (var optionName in options) {
       console.log(optionName)
       for (var option in options[optionName]) {
@@ -82,40 +80,53 @@ module.exports = React.createClass({
     var macrosBlock, optionsBlock
     var self = this
     var adjustments = this.state.adjustments
+    var macros = this.props.macros
+    var options = this.props.options
+
+    // update price
     var price = (parseFloat(this.props.basePrice) + adjustments['Price']).toFixed(2)
-    var macros = this.state.macros
+
+    // create macros block if we have macros data
     if (helpers.isEmptyObject(macros)) {
       macrosBlock = ''
     } else {
-      var macrosList = Object.keys(macros).map(function(k) {
-        var macroParts = /(\d+)(.*)/g.exec(macros[k])
+      var macrosList = Object.keys(macros).map(function(macroName) {
+        // parse '5g' into [_, '5', 'g', _ ...]
+        var macroParts = /(\d+)(.*)/g.exec(macros[macroName])
+
         var value = parseInt(macroParts[1])
         var measurement = macroParts[2]
-        console.log(k, adjustments[k])
-        if (adjustments[k]) {
-          value += adjustments[k]
+        if (adjustments[macroName]) {
+          value += adjustments[macroName]
         }
-        return <p><span className="name">{k}</span><span className="value">{value}{measurement}</span></p>
+        return <p><span className="name">{macroName}</span><span className="value">{value}{measurement}</span></p>
       })
       macrosBlock = <div className="macros">
                       <h2>MACROS</h2>
                       {macrosList}
                     </div>
     }
-    var options = this.props.options
+
+    // create options block if we have options data
     if (helpers.isEmptyObject(options)) {
       optionsBlock = ''
     } else {
-      var optionsList = Object.keys(options).map(function(k0) {
-        var optionChanges = Object.keys(options[k0]).map(function(k1) {
-          var id = [k0, k1].join('-')
+      var optionsList = Object.keys(options).map(function(optionName) {
+        var optionChanges = Object.keys(options[optionName]).map(function(optionValue) {
+          // label for=? needs an id to link to
+          var id = [optionName, optionValue].join('-')
+
           return <span className="option-value">
-                   <label htmlFor={id}>{k1}</label>
-                   <input id={id} type="radio" name="item-options" checked={self.state.selectedOptions[k0] === k1} onClick={self.handleOptionSelect(k0, k1, options[k0][k1])} />
+                   <label htmlFor={id}>{optionValue}</label>
+                   <input id={id}
+                          type="radio"
+                          name="item-options"
+                          checked={self.state.selectedOptions[optionName] === optionValue}
+                          onClick={self.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])} />
                  </span>
         })
         return <span className="option-wrapper">
-                 <span className="option-name">{k0}</span> {optionChanges}
+                 <span className="option-name">{optionName}</span> {optionChanges}
                </span>
       })
       optionsBlock = <div className="options">
@@ -123,6 +134,8 @@ module.exports = React.createClass({
                        {optionsList}
                      </div>
     }
+
+    // render the final widget
     return <div className="price-cart-widget">
              <div className="price">${price}</div>
              <div className="quantity">

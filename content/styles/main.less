@@ -20,6 +20,25 @@ body {
   min-height: 100%;
 }
 
+.top-bg {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  text-align: center;
+  width: 100%;
+  z-index: -1;
+}
+
+.messaging-bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 600px;
+  text-align: center;
+  z-index: -1;
+}
+
 h2 {
   font-size: 32px;
 }
@@ -155,7 +174,7 @@ h2 {
 
   h1 {
     margin-top: 196px;
-    font-size: 88px;
+    font-size: 80px;
   }
 
   .get-started {
@@ -686,6 +705,7 @@ h2 {
   h1 {
     font-size: 64px;
     margin-bottom: 10px;
+    color: #696969;
 
     // TODO: fix this before go live
     // &:before, &:after {
