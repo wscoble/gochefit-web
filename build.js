@@ -44,29 +44,18 @@ handlebars.registerHelper("sans_first_word", function(text) {
   }
 })
 
-handlebars.registerHelper("toJSON", function(value) {
+handlebars.registerHelper('toJSON', function(value) {
   return JSON.stringify(value)
 })
 
-handlebars.registerHelper('eachJSON', function(context, options) {
-  if (!!context) {
-    var ret = "";
-
-    for (var key in context) {
-      if (context.hasOwnProperty(key)) {
-        ret = ret + options.fn({key: key, value: context[key]})
-      }
-    }
-
-    for(var i=0, j=context.length; i<j; i++) {
-      ret = ret + options.fn(c[i]);
-    }
-
-    return ret;
-  } else {
-    return ''
+handlebars.registerHelper('eachSection', function(list, section, options) {
+  var filteredList = list.filter(function(e) { return e.fields.section === section })
+  ret = ''
+  for (var i = 0; i < filteredList.length; i++) {
+    ret += options.fn(filteredList[i])
   }
-});
+  return ret
+})
 
 var acceptjs
 

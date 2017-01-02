@@ -1,17 +1,102 @@
 <div class="menu-wrapper">
   <h1>MENU</h1>
-  {{#each data.entries}}
-  <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
-    <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
-    <div class="content">
-      <div class="title">{{fields.name}}<span class="separator"></span></div>
-      <div class="short-description">{{fields.shortDescription}}</div>
-      <div class="get-started">
-        <span class="wrapper">
-          <a href="/{{_fileName}}">ORDER IT</a>
-        </span>
+  <div class="section-selectors">
+    <span class="selector" data-section="breakfast">Breakfast</span>
+    <span class="selector" data-section="greens-and-grains">Greens + Grains</span>
+    <span class="selector" data-section="signature-items">Signature Items</span>
+    <span class="selector" data-section="chefs-choice">Chef's Choice</span>
+    <span class="selector" data-section="smoothies-and-snacks">Smoothies + Snacks</span>
+    <span class="selector" data-section="menu-plans">Menu Plans</span>
+  </div>
+
+  <div class="section" data-section="breakfast">
+    <h2>Breakfast</h2>
+    {{#eachSection data.entries 'breakfast'}}
+    <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
+      <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
+      <div class="content">
+        <div class="title">{{fields.name}}<span class="separator"></span></div>
+        <div class="short-description">{{fields.shortDescription}}</div>
+        <div class="get-started">
+          <span class="wrapper">
+            <a href="/{{_fileName}}">ORDER IT</a>
+          </span>
+        </div>
       </div>
     </div>
+    {{/eachSection}}
   </div>
-  {{/each}}
+
+  <div class="section" data-section="greens-and-grains">
+    <h2>Greens + Grains</h2>
+    {{#eachSection data.entries 'greens-and-grains'}}
+    <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
+      <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
+      <div class="content">
+        <div class="title">{{fields.name}}<span class="separator"></span></div>
+        <div class="short-description">{{fields.shortDescription}}</div>
+        <div class="get-started">
+          <span class="wrapper">
+            <a href="/{{_fileName}}">ORDER IT</a>
+          </span>
+        </div>
+      </div>
+    </div>
+    {{/eachSection}}
+  </div>
+
+  <div class="section" data-section="signature-items">
+    <h2>Signature Items</h2>
+    {{#eachSection data.entries 'signature-items'}}
+    <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
+      <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
+      <div class="content">
+        <div class="title">{{fields.name}}<span class="separator"></span></div>
+        <div class="short-description">{{fields.shortDescription}}</div>
+        <div class="get-started">
+          <span class="wrapper">
+            <a href="/{{_fileName}}">ORDER IT</a>
+          </span>
+        </div>
+      </div>
+    </div>
+    {{/eachSection}}
+  </div>
+
+  <div class="section" data-section="chefs-choice">
+    <h2>Chef's Choice</h2>
+    {{#eachSection data.entries 'chefs-choice'}}
+    <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
+      <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
+      <div class="content">
+        <div class="title">{{fields.name}}<span class="separator"></span></div>
+        <div class="short-description">{{fields.shortDescription}}</div>
+        <div class="get-started">
+          <span class="wrapper">
+            <a href="/{{_fileName}}">ORDER IT</a>
+          </span>
+        </div>
+      </div>
+    </div>
+    {{/eachSection}}
+  </div>
+
+  <div class="section" data-section="smoothies-and-snacks">
+    <h2>Smoothies + Snacks</h2>
+    {{#eachSection data.entries 'smoothies-and-snacks'}}
+    <div class="tile" style="background-image:url({{fields.tileColorBackground.fields.file.url}})" data-title="{{fields.name}}">
+      <div class="b-w-cover" style="background-image:url({{fields.tileBwBackground.fields.file.url}})"></div>
+      <div class="content">
+        <div class="title">{{fields.name}}<span class="separator"></span></div>
+        <div class="short-description">{{fields.shortDescription}}</div>
+        <div class="get-started">
+          <span class="wrapper">
+            <a href="/{{_fileName}}">ORDER IT</a>
+          </span>
+        </div>
+      </div>
+    </div>
+    {{/eachSection}}
+  </div>
+
 </div>
