@@ -1,5 +1,6 @@
 var CartWidget = require('./views/cart_widget.jsx')
 var PriceCartWidget = require('./views/price_cart_widget.jsx')
+var CheckoutItemsWidget = require('./views/checkout_items_widget.jsx')
 var ReactDOM = require('react-dom')
 var React = require('react')
 
@@ -18,6 +19,7 @@ module.exports = function(events) {
   if (!!priceCartWidgetElement) {
     var basePrice = priceCartWidgetElement.getAttribute('data-base-price')
     var name = priceCartWidgetElement.getAttribute('data-name')
+    var thumbnailUrl = priceCartWidgetElement.getAttribute('data-thumbnail-url')
     var options = {}, macros = {}
     if (priceCartWidgetElement.getAttribute('data-options') !== '') {
       options = JSON.parse(priceCartWidgetElement.getAttribute('data-options'))
@@ -30,7 +32,16 @@ module.exports = function(events) {
                                                           basePrice: basePrice,
                                                           options: options,
                                                           macros: macros,
+                                                          thumbnailUrl: thumbnailUrl,
                                                           name: name}),
                     priceCartWidgetElement)
+  }
+
+
+  var checkoutTableWidgetElement = document.getElementById('checkout-items')
+
+  if (!!checkoutTableWidgetElement) {
+    ReactDOM.render(React.createElement(CheckoutItemsWidget, {events: events}),
+                    checkoutTableWidgetElement)
   }
 }

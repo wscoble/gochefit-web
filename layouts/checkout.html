@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/styles/style.css">
+  {{> metadata }}
+</head>
+<body class="checkout">
+  {{> header }}
+  {{> (lookup . 'partial') }}
+  {{> footer }}
+  {{> scripts }}
+</body>
+</html>

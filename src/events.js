@@ -23,6 +23,7 @@ module.exports = {
   cartUpdated: new Signal(), // gets cart object
   cartItemAdded: new Signal(), // gets a cart item
   cartItemDeleted: new Signal(), // gets the cart item id
+  cartItemUpdated: new Signal(),
 
   // Payment events
 

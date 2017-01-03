@@ -54,6 +54,7 @@ module.exports = React.createClass({
       adjustments: this.state.adjustments,
       options: this.props.options,
       selectedOptions: this.state.selectedOptions,
+      thumbnailUrl: this.props.thumbnailUrl,
     }
     item.hash = md5(JSON.stringify(item))
     item.quantity = this.state.quantity

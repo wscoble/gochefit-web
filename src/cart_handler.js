@@ -7,7 +7,7 @@ module.exports = function(events) {
       if (err) {
         events.errored.dispatch(err)
       } else if (cart) {
-        events.cartUpdated.dispatch({totalItems: helpers.getItemCountFromCart(cart)})
+        events.cartUpdated.dispatch({items: JSON.parse(cart), totalItems: helpers.getItemCountFromCart(cart)})
       }
     })
 
@@ -41,10 +41,37 @@ module.exports = function(events) {
             } else {
               dataset.synchronize()
               events.debug.dispatch(record, 'updated-cart')
-              events.cartUpdated.dispatch({totalItems: helpers.getItemCountFromCart(cart)})
+              events.cartUpdated.dispatch({items: cart, totalItems: helpers.getItemCountFromCart(cart)})
 
             }
           })
+        }
+      })
+    })
+
+    events.cartItemDeleted.add(function(itemHash) {
+      dataset.get('items', function(err, cartStr) {
+        if (err) {
+          events.errored.dispatch(err)
+        } else {
+          var cart = []
+          if (cartStr) {
+            cart = JSON.parse(cartStr)
+
+            cart = cart.filter(function(item) {
+              return item.hash != itemHash
+            })
+
+            dataset.put('items', JSON.stringify(cart), function(err, record) {
+              if (err) {
+                events.errored.dispatch(err)
+              } else {
+                dataset.synchronize()
+                events.debug.dispatch(record, 'updated-cart after delete item')
+                events.cartUpdated.dispatch({items: cart, totalItems: helpers.getItemCountFromCart(cart)})
+              }
+            })
+          }
         }
       })
     })

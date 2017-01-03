@@ -67,6 +67,7 @@ h2 {
   }
 
   #cart-widget {
+    cursor: pointer;
     position: absolute;
     top: 35px;
     right: 30%;
@@ -894,4 +895,129 @@ h2 {
   background-image: url('/assets/menu-item-bg.png');
   background-color: #ffffff;
   background-repeat: no-repeat;
+}
+
+.checkout-breadcrumbs {
+  background: url(/assets/cart-header-bg.png) repeat-x bottom center;
+  height: 96px;
+  max-height: 96px;
+  text-align: center;
+  margin-top: -50px;
+  padding-top: 60px;
+
+  span {
+    opacity: .5;
+    margin:0 10px;
+
+    &.highlighted {
+      opacity: 1;
+    }
+
+    &.green {
+      opacity: 1;
+      color: #6f9f27;
+    }
+  }
+}
+
+body.checkout {
+  background-image: none;
+  background-color: white;
+}
+
+.checkout-wrapper {
+  width: 75%;
+  margin: 0 auto;
+  padding-top: 40px;
+  text-align: center;
+
+  h1 {
+    font-size: 72px;
+
+    &:before, &:after {
+      display: inline-block;
+      border-top: solid black 1px;
+      width: 35%;
+      margin: 0 30px;
+      padding: 10px;
+      content: " "
+    }
+  }
+
+  .items-message {
+    margin: 48px 0;
+  }
+
+  .green {
+    color: #6f9f27;
+  }
+
+  table {
+    width: 100%;
+
+    th {
+      color: #a19a8f;
+      padding-bottom: 12px;
+      font-weight: 300;
+    }
+
+    tr:first-of-type td {
+      border-top: 1px #dfdbd4 solid;
+    }
+
+    td {
+      vertical-align: middle;
+      border-bottom: 1px #dfdbd4 solid;
+      padding: 24px 0;
+
+      &.control {
+        width: 102px;
+
+        .delete-item {
+          cursor: pointer;
+        }
+      }
+
+      &.thumbnail {
+        width: 208px;
+
+        .checkout-thumbnail {
+          width: 208px;
+        }
+      }
+
+      &.price {
+        width: 224px;
+      }
+
+      &.quantity {
+        width: 72px;
+      }
+    }
+  }
+
+  .subtotal {
+    width: 100%;
+    text-align: right;
+    padding-right: 5%;
+    margin-top: 75px;
+    color: #a19a8f;
+
+    .value {
+      font-size: 48px;
+      padding: 24px;
+      background: url(/assets/price-bg.png) center center no-repeat;
+      color: white;
+      letter-spacing: -3px;
+      margin-left: 24px;
+    }
+  }
+
+  .next {
+    width: 100%;
+    margin-top: 84px;
+    padding-right: 4%;
+    text-align: right;
+  }
+
 }

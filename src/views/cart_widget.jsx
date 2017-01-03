@@ -14,12 +14,16 @@ module.exports = React.createClass({
     })
   },
 
+  startCheckout: function() {
+    window.location.pathname = '/checkout-1.html'
+  },
+
   render: function() {
     var itemsText = 'Items'
     if (this.state.items === 1) {
       itemsText = 'Item'
     }
-    return <span className='cart-widget'>
+    return <span className='cart-widget' onClick={this.startCheckout}>
              <img src='/assets/cart.png' />
              <label>{this.state.items} {itemsText}</label>
            </span>

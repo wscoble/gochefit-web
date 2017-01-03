@@ -1,5 +1,6 @@
 var events = require('./events')
 var loading = require('./loading')(events)
+var checkout = require('./checkout')(events)
 var cart_widget = require('./cart_widget')(events)
 var cart_handler = require('./cart_handler')(events)
 var messaging = require('./messaging')(events)
