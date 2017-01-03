@@ -628,12 +628,21 @@ h2 {
 
   .section-selectors {
     margin-bottom: 35px;
-    
+
     .selector {
       cursor: pointer;
       padding: 6px;
       margin: 0 40px;
       font-size: 20px;
+      opacity: .7;
+
+      &.on {
+        border-bottom: #714b10 solid 2px;
+      }
+
+      &.on, &:hover {
+        opacity: 1;
+      }
     }
   }
 

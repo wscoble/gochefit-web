@@ -7,6 +7,9 @@ module.exports = function(events) {
 
   $('h1').click(function(e) {
     $('.section').show()
+    $('.section-selectors .selector').each(function() {
+      $(this).removeClass('on')
+    })
   })
 
   $('.section-selectors .selector').click(function(e) {
@@ -17,6 +20,13 @@ module.exports = function(events) {
         self.show()
       } else {
         self.hide()
+      }
+    })
+    $('.section-selectors .selector').each(function() {
+      if ($(this).attr('data-section') !== section) {
+        $(this).removeClass('on')
+      } else {
+        $(this).addClass('on')
       }
     })
   })
