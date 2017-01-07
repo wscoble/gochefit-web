@@ -1,5 +1,5 @@
 function md5cycle(x, k) {
-var a = x[0], b = x[1], c = x[2], d = x[3];
+let a = x[0], b = x[1], c = x[2], d = x[3];
 
 a = ff(a, b, c, d, k[0], 7, -680876936);
 d = ff(d, a, b, c, k[1], 12, -389564586);
@@ -98,14 +98,14 @@ return cmn(c ^ (b | (~d)), a, b, x, s, t);
 }
 
 function md51(s) {
-txt = '';
-var n = s.length,
+let txt = '';
+let n = s.length,
 state = [1732584193, -271733879, -1732584194, 271733878], i;
 for (i=64; i<=s.length; i+=64) {
 md5cycle(state, md5blk(s.substring(i-64, i)));
 }
 s = s.substring(i-64);
-var tail = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
+let tail = [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0];
 for (i=0; i<s.length; i++)
 tail[i>>2] |= s.charCodeAt(i) << ((i%4) << 3);
 tail[i>>2] |= 0x80 << ((i%4) << 3);
@@ -134,7 +134,7 @@ return state;
  * 8-bit unsigned value arrays.
  */
 function md5blk(s) { /* I figured global was faster.   */
-var md5blks = [], i; /* Andy King said do it this way. */
+let md5blks = [], i; /* Andy King said do it this way. */
 for (i=0; i<64; i+=4) {
 md5blks[i>>2] = s.charCodeAt(i)
 + (s.charCodeAt(i+1) << 8)
@@ -144,11 +144,11 @@ md5blks[i>>2] = s.charCodeAt(i)
 return md5blks;
 }
 
-var hex_chr = '0123456789abcdef'.split('');
+let hex_chr = '0123456789abcdef'.split('');
 
 function rhex(n)
 {
-var s='', j=0;
+let s='', j=0;
 for(; j<4; j++)
 s += hex_chr[(n >> (j * 8 + 4)) & 0x0F]
 + hex_chr[(n >> (j * 8)) & 0x0F];
@@ -156,7 +156,7 @@ return s;
 }
 
 function hex(x) {
-for (var i=0; i<x.length; i++)
+for (let i=0; i<x.length; i++)
 x[i] = rhex(x[i]);
 return x.join('');
 }
@@ -177,7 +177,7 @@ return (a + b) & 0xFFFFFFFF;
 
 if (md5('hello') != '5d41402abc4b2a76b9719d911017c592') {
 function add32(x, y) {
-var lsw = (x & 0xFFFF) + (y & 0xFFFF),
+let lsw = (x & 0xFFFF) + (y & 0xFFFF),
 msw = (x >> 16) + (y >> 16) + (lsw >> 16);
 return (msw << 16) | (lsw & 0xFFFF);
 }

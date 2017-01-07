@@ -1,31 +1,31 @@
-var React = require('react')
+let React = require('react')
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
-      items: 0
-    }
-  },
+export default class CartWidget extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {itemCount: 0}
+  }
 
-  componentDidMount: function() {
-    var self = this
-    this.props.events.cartUpdated.add(function(cart) {
-      self.setState({items: cart.totalItems})
+  componentDidMount () {
+    let self = this
+    this.props.events.cartUpdated.add((cart) => {
+      self.setState({itemCount: cart.totalItems})
     })
-  },
+  }
 
-  startCheckout: function() {
+  startCheckout () {
     window.location.pathname = '/checkout-1.html'
-  },
+  }
 
-  render: function() {
-    var itemsText = 'Items'
-    if (this.state.items === 1) {
+  render () {
+    let itemCount = this.state.itemCount
+    let itemsText = 'Items'
+    if (itemCount === 1) {
       itemsText = 'Item'
     }
     return <span className='cart-widget' onClick={this.startCheckout}>
              <img src='/assets/cart.png' />
-             <label>{this.state.items} {itemsText}</label>
+             <label>{itemCount} {itemsText}</label>
            </span>
   }
-})
+}

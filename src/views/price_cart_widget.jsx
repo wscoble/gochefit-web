@@ -1,28 +1,25 @@
-var md5 = require('../vendor/md5').md5
-var helpers = require('../helpers')
-var React = require('react')
+let md5 = require('../vendor/md5').md5
+let helpers = require('../helpers')
+let React = require('react')
+import QuantityWidget from './quantity_widget.jsx' // eslint-disable-line
 
 module.exports = React.createClass({
-  getInitialState: function() {
+  getInitialState: () => {
     return {
       quantity: 1,
       selectedOptions: {},
       addMessage: 'ADD TO CART',
-      adjustments: {},
+      adjustments: {}
     }
   },
 
-  componentDidMount: function() {
-    var self = this
-    var options = this.props.options
+  componentDidMount: () => {
+    let options = this.props.options
 
-    for (var optionName in options) {
-      console.log(optionName)
-      for (var option in options[optionName]) {
-        console.log(option)
-        console.log(options[optionName][option])
+    for (let optionName in options) {
+      for (let option in options[optionName]) {
         if (options[optionName][option]['Price'] === 0) {
-          var optionState = {}
+          let optionState = {}
           optionState[optionName] = option
           this.setState({
             selectedOptions: optionState
@@ -33,70 +30,70 @@ module.exports = React.createClass({
     }
   },
 
-  handleQtyIncrease: function() {
-    this.setState(function(p, props) {
+  handleQtyIncrease: () => {
+    this.setState((p, props) => {
       return {quantity: p.quantity + 1}
     })
   },
 
-  handleQtyDecrease: function() {
+  handleQtyDecrease: () => {
     if (this.state.quantity > 1) {
-      this.setState(function(p, props) {
+      this.setState((p, props) => {
         return {quantity: p.quantity - 1}
       })
     }
   },
 
-  handleAddToCart: function() {
-    var item = {
+  handleAddToCart: () => {
+    let item = {
       name: this.props.name,
       basePrice: this.props.basePrice,
       adjustments: this.state.adjustments,
       options: this.props.options,
       selectedOptions: this.state.selectedOptions,
-      thumbnailUrl: this.props.thumbnailUrl,
+      thumbnailUrl: this.props.thumbnailUrl
     }
     item.hash = md5(JSON.stringify(item))
     item.quantity = this.state.quantity
     this.props.events.cartItemAdded.dispatch(item)
     this.setState({addMessage: 'ADDED'})
 
-    var self = this
-    setTimeout(function() {
+    let self = this
+    setTimeout(() => {
       self.setState({addMessage: 'ADD TO CART'})
     }, 5000)
   },
 
-  handleOptionSelect: function(name, value, changes) {
-    var self = this
-    return function() {
-      var selectedOptionsChange = {}
+  handleOptionSelect: (name, value, changes) => {
+    let self = this
+    return () => {
+      let selectedOptionsChange = {}
       selectedOptionsChange[name] = value
       self.setState({selectedOptions: selectedOptionsChange})
       self.setState({adjustments: changes})
     }
   },
 
-  render: function() {
-    var macrosBlock, optionsBlock
-    var self = this
-    var adjustments = this.state.adjustments
-    var macros = this.props.macros
-    var options = this.props.options
+  render: () => {
+    let macrosBlock, optionsBlock
+    let self = this
+    let adjustments = self.state.adjustments
+    let macros = self.props.macros
+    let options = self.props.options
 
     // update price
-    var price = (parseFloat(this.props.basePrice) + adjustments['Price']).toFixed(2)
+    let price = (parseFloat(self.props.basePrice) + adjustments['Price']).toFixed(2)
 
     // create macros block if we have macros data
     if (helpers.isEmptyObject(macros)) {
       macrosBlock = ''
     } else {
-      var macrosList = Object.keys(macros).map(function(macroName) {
+      let macrosList = Object.keys(macros).map((macroName) => {
         // parse '5g' into [_, '5', 'g', _ ...]
-        var macroParts = /(\d+)(.*)/g.exec(macros[macroName])
+        let macroParts = /(\d+)(.*)/g.exec(macros[macroName])
 
-        var value = parseInt(macroParts[1])
-        var measurement = macroParts[2]
+        let value = parseInt(macroParts[1])
+        let measurement = macroParts[2]
         if (adjustments[macroName]) {
           value += adjustments[macroName]
         }
@@ -112,10 +109,10 @@ module.exports = React.createClass({
     if (helpers.isEmptyObject(options)) {
       optionsBlock = ''
     } else {
-      var optionsList = Object.keys(options).map(function(optionName) {
-        var optionChanges = Object.keys(options[optionName]).map(function(optionValue) {
+      let optionsList = Object.keys(options).map((optionName) => {
+        let optionChanges = Object.keys(options[optionName]).map((optionValue) => {
           // label for=? needs an id to link to
-          var id = [optionName, optionValue].join('-')
+          let id = [optionName, optionValue].join('-')
 
           return <span className="option-value">
                    <label htmlFor={id}>{optionValue}</label>
@@ -139,14 +136,10 @@ module.exports = React.createClass({
     // render the final widget
     return <div className="price-cart-widget">
              <div className="price">${price}</div>
-             <div className="quantity">
-               <img src="/assets/arrow-up.png" className="above" onClick={this.handleQtyIncrease} />
-               {this.state.quantity}
-               <img src="/assets/arrow-down.png" className="below" onClick={this.handleQtyDecrease} />
-             </div>
+             <QuantityWidget quantity={self.state.quantity} handleQtyIncrease={self.handleQtyIncrease} handleQtyDecrease={self.handleQtyDecrease} />
              <div className="get-started">
                <span className="wrapper">
-                 <a onClick={this.handleAddToCart}>{this.state.addMessage}</a>
+                 <a onClick={self.handleAddToCart}>{self.state.addMessage}</a>
                </span>
              </div>
              {macrosBlock}

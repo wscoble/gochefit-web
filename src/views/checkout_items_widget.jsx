@@ -1,51 +1,57 @@
-var React = require('react')
+let React = require('react')
 
-var Quantity = React.createClass({
-  render: function() {
-    return <span>{this.props.qty}</span>
+import QuantityWidget from './quantity_widget.jsx' // eslint-disable-line
+
+export default class CartTableWidget extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {items: []}
   }
-})
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
-      items: []
-    }
-  },
-
-  componentDidMount: function() {
-    var self = this
-    this.props.events.cartUpdated.add(function(cart) {
+  componentDidMount () {
+    let self = this
+    self.props.events.cartUpdated.add((cart) => {
       if (!!cart && cart.hasOwnProperty('items')) {
         self.setState({items: cart.items})
       }
     })
-  },
+  }
 
-  removeItem: function(item) {
-    var self = this
-    return function() {
+  removeItem (item) {
+    let self = this
+    return () => {
       self.props.events.cartItemDeleted.dispatch(item.hash)
     }
-  },
+  }
 
-  updateQty: function(item) {
-    var self = this
-    return function(qty) {
-      self.props.events.cartItemUpdated(item, qty)
+  increaseQty (item) {
+    let self = this
+    return () => {
+      self.props.events.cartItemUpdated.dispatch(item, item.quantity + 1)
     }
-  },
+  }
 
-  render: function() {
-    var self = this
-    var rows = this.state.items.map(function(item) {
-      var priceAdjust = 0
+  decreaseQty (item) {
+    let self = this
+    return () => {
+      if (item.quantity === 1) {
+        self.props.events.cartItemDeleted.dispatch(item.hash)
+      } else {
+        self.props.events.cartItemUpdated.dispatch(item, item.quantity - 1)
+      }
+    }
+  }
+
+  render () {
+    let self = this
+    let rows = self.state.items.map((item) => {
+      let priceAdjust = 0
       if (item.adjustments.hasOwnProperty('Price')) {
         priceAdjust = parseFloat(item.adjustments.Price)
       }
-      var price = (parseFloat(item.basePrice) + priceAdjust).toFixed(2)
-      var qty = item.quantity
-      var total = (price * qty).toFixed(2)
+      let price = (parseFloat(item.basePrice) + priceAdjust).toFixed(2)
+      let qty = item.quantity
+      let total = (price * qty).toFixed(2)
       return <tr>
                <td className='control'>
                  <img src='/assets/delete-item.png' className='delete-item' onClick={self.removeItem(item)} />
@@ -55,11 +61,11 @@ module.exports = React.createClass({
                </td>
                <td className='name'>{item.name}</td>
                <td className='price'>${price}</td>
-               <td className='quantity'><Quantity qty={item.quantity} onUpdate={self.updateQty(item)} /></td>
+               <td className='quantity'><QuantityWidget quantity={item.quantity} handleQtyIncrease={self.increaseQty(item)} handleQtyDecrease={self.decreaseQty(item)} /></td>
                <td className='total price'>${total}</td>
              </tr>
     })
-    
+
     return <table>
              <thead>
                <th className='control'></th>
@@ -74,4 +80,4 @@ module.exports = React.createClass({
              </tbody>
            </table>
   }
-})
+}

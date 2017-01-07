@@ -1,17 +1,18 @@
-module.exports = function(events) {
-  events.authenticated.add(function(credentials) {
+/* global $ */
+module.exports = (events) => {
+  events.authenticated.add((credentials) => {
 
   })
 
-  $('[data-title]').on('mouseenter', function(e) {
-    var self = $(this)
-    var sectionTitle = self.attr('data-title')
+  $('[data-title]').on('mouseenter', (e) => {
+    let self = $(this)
+    let sectionTitle = self.attr('data-title')
     events.track.dispatch(sectionTitle, 'mouse entered')
   })
 
-  $('[data-on-click]').on('click', function(e) {
-    var self = $(this)
-    var eventName = self.attr('data-on-click')
+  $('[data-on-click]').on('click', (e) => {
+    let self = $(this)
+    let eventName = self.attr('data-on-click')
     events.track.dispatch(eventName, 'clicked')
   })
 }

@@ -1,26 +1,26 @@
-var CartWidget = require('./views/cart_widget.jsx')
-var PriceCartWidget = require('./views/price_cart_widget.jsx')
-var CheckoutItemsWidget = require('./views/checkout_items_widget.jsx')
-var ReactDOM = require('react-dom')
-var React = require('react')
+import CartWidget from './views/cart_widget.jsx'
+let PriceCartWidget = require('./views/price_cart_widget.jsx')
+import CheckoutItemsWidget from './views/checkout_items_widget.jsx'
+import ShippingWidget from './views/shipping_widget.jsx'
+let ReactDOM = require('react-dom')
+let React = require('react')
 
+module.exports = (events) => {
+  let cartWidgetElement = document.getElementById('cart-widget')
 
-module.exports = function(events) {
-  var cartWidgetElement = document.getElementById('cart-widget')
-
-  if (!!cartWidgetElement) {
+  if (cartWidgetElement) {
     ReactDOM.render(React.createElement(CartWidget, {events: events}),
                     cartWidgetElement)
   }
 
+  let priceCartWidgetElement = document.getElementById('price-cart-widget')
 
-  var priceCartWidgetElement = document.getElementById('price-cart-widget')
-
-  if (!!priceCartWidgetElement) {
-    var basePrice = priceCartWidgetElement.getAttribute('data-base-price')
-    var name = priceCartWidgetElement.getAttribute('data-name')
-    var thumbnailUrl = priceCartWidgetElement.getAttribute('data-thumbnail-url')
-    var options = {}, macros = {}
+  if (priceCartWidgetElement) {
+    let basePrice = priceCartWidgetElement.getAttribute('data-base-price')
+    let name = priceCartWidgetElement.getAttribute('data-name')
+    let thumbnailUrl = priceCartWidgetElement.getAttribute('data-thumbnail-url')
+    let options = {}
+    let macros = {}
     if (priceCartWidgetElement.getAttribute('data-options') !== '') {
       options = JSON.parse(priceCartWidgetElement.getAttribute('data-options'))
     }
@@ -28,20 +28,29 @@ module.exports = function(events) {
       macros = JSON.parse(priceCartWidgetElement.getAttribute('data-macros'))
     }
 
-    ReactDOM.render(React.createElement(PriceCartWidget, {events: events,
-                                                          basePrice: basePrice,
-                                                          options: options,
-                                                          macros: macros,
-                                                          thumbnailUrl: thumbnailUrl,
-                                                          name: name}),
-                    priceCartWidgetElement)
+    let props = {
+      events: events,
+      basePrice: basePrice,
+      options: options,
+      macros: macros,
+      thumbnailUrl: thumbnailUrl,
+      name: name
+    }
+
+    ReactDOM.render(React.createElement(PriceCartWidget, props), priceCartWidgetElement)
   }
 
+  let checkoutTableWidgetElement = document.getElementById('checkout-items')
 
-  var checkoutTableWidgetElement = document.getElementById('checkout-items')
-
-  if (!!checkoutTableWidgetElement) {
+  if (checkoutTableWidgetElement) {
     ReactDOM.render(React.createElement(CheckoutItemsWidget, {events: events}),
                     checkoutTableWidgetElement)
+  }
+
+  let shippingWidgetElement = document.getElementById('shipping-widget')
+
+  if (shippingWidgetElement) {
+    ReactDOM.render(React.createElement(ShippingWidget, {events: events}),
+                    shippingWidgetElement)
   }
 }

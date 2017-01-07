@@ -1,19 +1,19 @@
-var events = require('./events')
-var loading = require('./loading')(events)
-var checkout = require('./checkout')(events)
-var cart_widget = require('./cart_widget')(events)
-var cart_handler = require('./cart_handler')(events)
-var messaging = require('./messaging')(events)
-var payments = require('./payments')(events)
-var tracking = require('./tracking')(events)
-var aws = require('./aws')(events)
-var slides = require('./slides')(events)
-var menu = require('./menu')(events)
+import { default as events } from './events'
+require('./loading')(events)
+require('./checkout')(events)
+require('./cart_widget')(events)
+require('./cart_handler')(events)
+require('./messaging')(events)
+require('./payments')(events)
+require('./tracking')(events)
+require('./aws')(events)
+require('./slides')(events)
+require('./menu')(events)
 
 if (process.env.DEVELOPMENT === '1') {
   require('./development_mode')(events)
   if (process.env.RANDOM_SIGNALS === '1') {
-    setInterval(function() {
+    setInterval(() => {
       events.cartUpdated.dispatch({
         totalItems: Math.floor(Math.random() * 25)
       })

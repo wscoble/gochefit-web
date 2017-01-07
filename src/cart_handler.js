@@ -1,79 +1,122 @@
-var Accept = window.Accept || {}
-var helpers = require('./helpers')
+let helpers = require('./helpers')
 
-module.exports = function(events) {
-  events.cartDatasetOpened.add(function(dataset) {
-    dataset.get('items', function(err, cart) {
-      if (err) {
-        events.errored.dispatch(err)
-      } else if (cart) {
-        events.cartUpdated.dispatch({items: JSON.parse(cart), totalItems: helpers.getItemCountFromCart(cart)})
+module.exports = (events) => {
+  events.cartDatasetOpened.add((dataset) => {
+    let promisifyCallback = (resolve, reject, cb) => {
+      return (err, data) => {
+        if (err) {
+          reject(err)
+        } else if (typeof cb === 'function') {
+          resolve(cb(data))
+        } else {
+          resolve(data)
+        }
       }
-    })
+    }
+
+    let getDataset = (name) => {
+      return new Promise((resolve, reject) => {
+        dataset.get(name, promisifyCallback(resolve, reject, (data) => {
+          if (data) {
+            return JSON.parse(data)
+          }
+          return data
+        }))
+      })
+    }
+
+    let putDataset = (name, data) => {
+      return new Promise((resolve, reject) => {
+        dataset.put(name, JSON.stringify(data), promisifyCallback(resolve, reject))
+      })
+    }
+
+    let dispatchDebug = (name) => {
+      return (value) => {
+        return new Promise((resolve, reject) => {
+          console.log('calling debug.dispatch with', name, 'and', value)
+          events.debug.dispatch(name, value)
+          resolve(value)
+        })
+      }
+    }
+
+    let dispatchError = (error) => {
+      events.errored.dispatch(error)
+    }
+
+    let dispatchCartUpdated = (cart) => {
+      events.cartUpdated.dispatch({items: cart, totalItems: helpers.getItemCountFromCart(cart)})
+      return cart
+    }
+
+    // get existing cart items and dispatch the updated event
+    getDataset('items').then(dispatchCartUpdated).then(dispatchDebug('initial cart updated')).catch(dispatchError)
 
     // wire up cart events
-    events.cartItemAdded.add(function(item) {
-      dataset.get('items', function(err, value) {
-        if (err) {
-          events.errored.dispatch(err)
-        } else {
-          var cart = []
-          if (value) {
-            cart = JSON.parse(value)
 
-            // update quantity if item already exists in cart
-            itemsHashes = cart.map(function(i) {
-              return i.hash
-            })
-            var hashIndex = itemsHashes.indexOf(item.hash)
-            if (hashIndex > -1) {
-              cart[hashIndex].quantity += item.quantity
-            } else {
-              cart.push(item)
-            }
+    events.cartItemAdded.add((item) => {
+      getDataset('items').then((cart) => {
+        if (cart) {
+          // update quantity if item already exists in cart
+          let itemsHashes = cart.map((i) => i.hash)
+          let hashIndex = itemsHashes.indexOf(item.hash)
+          if (hashIndex > -1) {
+            cart[hashIndex].quantity += item.quantity
           } else {
             cart.push(item)
           }
-
-          dataset.put('items', JSON.stringify(cart), function(err, record) {
-            if (err) {
-              events.errored.dispatch(err)
-            } else {
-              dataset.synchronize()
-              events.debug.dispatch(record, 'updated-cart')
-              events.cartUpdated.dispatch({items: cart, totalItems: helpers.getItemCountFromCart(cart)})
-
-            }
-          })
+        } else {
+          cart = [item]
         }
+        return cart
       })
+      .then((cart) => {
+        return putDataset('items', cart).then((record) => {
+          dataset.synchronize()
+          return cart
+        })
+      })
+      .then(dispatchDebug('cart updated'))
+      .then(dispatchCartUpdated)
+      .catch(dispatchError)
     })
 
-    events.cartItemDeleted.add(function(itemHash) {
-      dataset.get('items', function(err, cartStr) {
-        if (err) {
-          events.errored.dispatch(err)
-        } else {
-          var cart = []
-          if (cartStr) {
-            cart = JSON.parse(cartStr)
-
-            cart = cart.filter(function(item) {
-              return item.hash != itemHash
+    events.cartItemDeleted.add((itemHash) => {
+      getDataset('items')
+        .then((cart) => {
+          return cart.filter((item) => item.hash !== itemHash)
+        })
+        .then((cart) => {
+          return putDataset('items', cart)
+            .then((record) => {
+              dataset.synchronize()
+              return cart
             })
+        })
+        .then(dispatchCartUpdated)
+        .catch(dispatchError)
+    })
 
-            dataset.put('items', JSON.stringify(cart), function(err, record) {
-              if (err) {
-                events.errored.dispatch(err)
-              } else {
-                dataset.synchronize()
-                events.debug.dispatch(record, 'updated-cart after delete item')
-                events.cartUpdated.dispatch({items: cart, totalItems: helpers.getItemCountFromCart(cart)})
-              }
-            })
+    events.cartItemUpdated.add((item, quantity) => {
+      getDataset('items')
+        .then((cart) => {
+          let itemsHashes = cart.map((i) => i.hash)
+          let hashIndex = itemsHashes.indexOf(item.hash)
+          if (hashIndex > -1) {
+            cart[hashIndex].quantity = quantity
           }
-        }
-      })
+          return cart
+        })
+        .then((cart) => {
+          return putDataset('items', cart)
+            .then((record) => {
+              dataset.synchronize()
+              return cart
+            })
+        })
+        .then(dispatchCartUpdated)
+        .catch(dispatchError)
     })
   })
 }

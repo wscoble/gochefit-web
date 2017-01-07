@@ -1,14 +1,13 @@
-var MessageWidget = require('./views/message_widget.jsx')
-var ReactDOM = require('react-dom')
-var React = require('react')
+import MessageWidget from './views/message_widget.jsx'
+let ReactDOM = require('react-dom')
+let React = require('react')
 
-
-module.exports = function(events) {
-  var messageElement = document.getElementById('message-widget');
+module.exports = (events) => {
+  let messageElement = document.getElementById('message-widget')
   if (messageElement) {
-    var props = {
+    let props = {
       events: events,
-      buttonText: messageElement.getAttribute('data-button-text'),
+      buttonText: messageElement.getAttribute('data-button-text')
     }
     ReactDOM.render(React.createElement(MessageWidget, props), messageElement)
   }

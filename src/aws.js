@@ -1,29 +1,30 @@
+/* global AWS, AMA */
 AWS.config.region = process.env.AWS_REGION
 
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
   IdentityPoolId: process.env.COGNITO_IDENTITY_POOL_ID
 })
 
-var analyticsOptions = {
+let analyticsOptions = {
   appId: process.env.MOBILE_ANALYTICS_APP_ID
 }
 
-
-module.exports = function(events) {
-  AWS.config.credentials.get(function() {
-    var lambda = new AWS.Lambda()
-    events.debug.dispatch(AWS.config.credentials)
+module.exports = (events) => {
+  AWS.config.credentials.get(() => {
+    let lambda = new AWS.Lambda()
+    console.log('calling debug.dispatch with got aws credentials and', AWS.config.credentials)
+    events.debug.dispatch('got aws credentials', AWS.config.credentials)
 
     // Analytics setup
 
-    var mobileAnalyticsClient = new AMA.Manager(analyticsOptions)
+    let mobileAnalyticsClient = new AMA.Manager(analyticsOptions)
     mobileAnalyticsClient.startSession()
 
-    window.onbeforeunload = function() {
+    window.onbeforeunload = () => {
       mobileAnalyticsClient.stopSession()
     }
 
-    events.track.add(function(source, eventName) {
+    events.track.add((source, eventName) => {
       mobileAnalyticsClient.recordEvent(eventName, {
         source: source
       })
@@ -31,9 +32,9 @@ module.exports = function(events) {
 
     // Cognito data setup
 
-    var syncClient = new AWS.CognitoSyncManager()
+    let syncClient = new AWS.CognitoSyncManager()
 
-    syncClient.openOrCreateDataset('chefit', function(err, dataset) {
+    syncClient.openOrCreateDataset('chefit', (err, dataset) => {
       if (err) {
         events.errored.dispatch(err)
       } else {
@@ -41,7 +42,7 @@ module.exports = function(events) {
       }
     })
 
-    syncClient.openOrCreateDataset('cart', function(err, dataset) {
+    syncClient.openOrCreateDataset('cart', (err, dataset) => {
       if (err) {
         events.errored.dispatch(err)
       } else {
@@ -50,9 +51,8 @@ module.exports = function(events) {
     })
 
     // Message events
-
-    events.messageSendRequested.add(function(name, email, message) {
-      var params = {
+    events.messageSendRequested.add((name, email, message) => {
+      let params = {
         FunctionName: 'MessageSender',
         InvocationType: 'RequestResponse',
         Payload: JSON.stringify({
@@ -62,7 +62,7 @@ module.exports = function(events) {
         })
       }
 
-      lambda.invoke(params, function(err, data) {
+      lambda.invoke(params, (err, data) => {
         if (err) {
           events.messageSendFailed.dispatch(err)
         } else {

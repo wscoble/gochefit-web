@@ -2,7 +2,7 @@
 (function() {
 
   (function($, window, document) {
-    var Plugin, defaults, pluginName;
+    let Plugin, defaults, pluginName;
     pluginName = "slidesjs";
     defaults = {
       width: 940,
@@ -54,7 +54,7 @@
 
     })();
     Plugin.prototype.init = function() {
-      var $element, nextButton, pagination, playButton, prevButton, stopButton,
+      let $element, nextButton, pagination, playButton, prevButton, stopButton,
         _this = this;
       $element = $(this.element);
       this.data = $.data(this);
@@ -88,7 +88,7 @@
         webkitBackfaceVisibility: "hidden"
       });
       $.each($(".slidesjs-control", $element).children(), function(i) {
-        var $slide;
+        let $slide;
         $slide = $(this);
         return $slide.attr("slidesjs-index", i);
       });
@@ -169,7 +169,7 @@
           "class": "slidesjs-pagination"
         }).appendTo($element);
         $.each(new Array(this.data.total), function(i) {
-          var paginationItem, paginationLink;
+          let paginationItem, paginationLink;
           paginationItem = $("<li>", {
             "class": "slidesjs-pagination-item"
           }).appendTo(pagination);
@@ -195,7 +195,7 @@
       return this.options.callback.loaded(this.options.start);
     };
     Plugin.prototype._setActive = function(number) {
-      var $element, current;
+      let $element, current;
       $element = $(this.element);
       this.data = $.data(this);
       current = number > -1 ? number : this.data.current;
@@ -203,7 +203,7 @@
       return $(".slidesjs-pagination li:eq(" + current + ") a", $element).addClass("active");
     };
     Plugin.prototype.update = function() {
-      var $element, height, width;
+      let $element, height, width;
       $element = $(this.element);
       this.data = $.data(this);
       $(".slidesjs-control", $element).children(":not(:eq(" + this.data.current + "))").css({
@@ -221,7 +221,7 @@
       });
     };
     Plugin.prototype.next = function(effect) {
-      var $element;
+      let $element;
       $element = $(this.element);
       this.data = $.data(this);
       $.data(this, "direction", "next");
@@ -235,7 +235,7 @@
       }
     };
     Plugin.prototype.previous = function(effect) {
-      var $element;
+      let $element;
       $element = $(this.element);
       this.data = $.data(this);
       $.data(this, "direction", "previous");
@@ -249,7 +249,7 @@
       }
     };
     Plugin.prototype.goto = function(number) {
-      var $element, effect;
+      let $element, effect;
       $element = $(this.element);
       this.data = $.data(this);
       if (effect === void 0) {
@@ -283,7 +283,7 @@
       }
     };
     Plugin.prototype._setuptouch = function() {
-      var $element, next, previous, slidesControl;
+      let $element, next, previous, slidesControl;
       $element = $(this.element);
       this.data = $.data(this);
       slidesControl = $(".slidesjs-control", $element);
@@ -305,7 +305,7 @@
       });
     };
     Plugin.prototype._touchstart = function(e) {
-      var $element, touches;
+      let $element, touches;
       $element = $(this.element);
       this.data = $.data(this);
       touches = e.originalEvent.touches[0];
@@ -316,7 +316,7 @@
       return e.stopPropagation();
     };
     Plugin.prototype._touchend = function(e) {
-      var $element, duration, prefix, slidesControl, timing, touches, transform,
+      let $element, duration, prefix, slidesControl, timing, touches, transform,
         _this = this;
       $element = $(this.element);
       this.data = $.data(this);
@@ -348,7 +348,7 @@
       return e.stopPropagation();
     };
     Plugin.prototype._touchmove = function(e) {
-      var $element, prefix, slidesControl, touches, transform;
+      let $element, prefix, slidesControl, touches, transform;
       $element = $(this.element);
       this.data = $.data(this);
       touches = e.originalEvent.touches[0];
@@ -364,7 +364,7 @@
       return e.stopPropagation();
     };
     Plugin.prototype.play = function(next) {
-      var $element, currentSlide, slidesContainer,
+      let $element, currentSlide, slidesContainer,
         _this = this;
       $element = $(this.element);
       this.data = $.data(this);
@@ -412,7 +412,7 @@
       }
     };
     Plugin.prototype.stop = function(clicked) {
-      var $element;
+      let $element;
       $element = $(this.element);
       this.data = $.data(this);
       clearInterval(this.data.playInterval);
@@ -428,7 +428,7 @@
       }
     };
     Plugin.prototype._slide = function(number) {
-      var $element, currentSlide, direction, duration, next, prefix, slidesControl, timing, transform, value,
+      let $element, currentSlide, direction, duration, next, prefix, slidesControl, timing, transform, value,
         _this = this;
       $element = $(this.element);
       this.data = $.data(this);
@@ -517,7 +517,7 @@
       }
     };
     Plugin.prototype._fade = function(number) {
-      var $element, currentSlide, next, slidesControl, value,
+      let $element, currentSlide, next, slidesControl, value,
         _this = this;
       $element = $(this.element);
       this.data = $.data(this);
@@ -571,7 +571,7 @@
       }
     };
     Plugin.prototype._getVendorPrefix = function() {
-      var body, i, style, transition, vendor;
+      let body, i, style, transition, vendor;
       body = document.body || document.documentElement;
       style = body.style;
       transition = "transition";

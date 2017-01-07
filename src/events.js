@@ -1,9 +1,8 @@
-var Signal = require('signals').Signal
+import { Signal } from 'signals'
 
-module.exports = {
+export default {
   // Browser events
   loadingComplete: new Signal(),
-
 
   // User events
   authenticated: new Signal(), // gets AWS.config.credentials
@@ -13,11 +12,9 @@ module.exports = {
   messageSent: new Signal(), // gets a success message
   messageSendFailed: new Signal(), // gets an error message
 
-
   // Tracking events
   track: new Signal(), // gets (data-title, event-name)
   debug: new Signal(), // for debugging
-
 
   // Cart events
   cartUpdated: new Signal(), // gets cart object
@@ -27,7 +24,6 @@ module.exports = {
 
   // Payment events
 
-
   // Error signal
-  errored: new Signal(),
+  errored: new Signal()
 }

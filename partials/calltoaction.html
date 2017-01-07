@@ -6,7 +6,12 @@
   <span class="get-started-link">
     <div class="get-started">
       <span class="wrapper">
-        <a href="{{getStartedUrl}}">{{fields.actionLabel}}</a>
+        {{#if fields.actionUrl}}
+        <a href="{{fields.actionUrl}}">{{fields.actionLabel}}</a>
+        {{/if}}
+        {{#unless fields.actionUrl}}
+        <a>{{fields.actionLabel}}</a>
+        {{/unless}}
       </span>
     </div>
   </span>

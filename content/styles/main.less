@@ -292,6 +292,10 @@ h2 {
       top: 120px;
       left: 25px;
       text-align: left;
+
+      p {
+        padding-bottom: 12px;
+      }
     }
   }
 }
@@ -334,11 +338,12 @@ h2 {
     }
 
     .content {
-      width: 80%;
-      margin-left: 10%;
+      width: 100%;
       position: absolute;
       bottom: 120px;
       left: 0;
+      padding: 20px;
+      background-color: rgba(0,0,0,0.4);
     }
 
     .get-started-link {
@@ -993,6 +998,24 @@ body.checkout {
       &.quantity {
         width: 72px;
       }
+
+      div.quantity {
+        position: relative;
+        text-align: center;
+        .above {
+          position: absolute;
+          cursor: pointer;
+          top: -42px;
+        }
+        .value {
+          position: absolute;
+        }
+        .below {
+          position: absolute;;
+          cursor: pointer;
+          bottom: -58px;
+        }
+      }
     }
   }
 
@@ -1020,4 +1043,32 @@ body.checkout {
     text-align: right;
   }
 
+  .delivery-instructions {
+    max-width: 600px;
+    margin: 0 auto;
+    padding-top: 48px;
+
+    h2 {
+      font-size: 22px;
+      font-family: "adobe-garamond-pro", "Times New Roman", sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      padding-bottom: 28px;
+    }
+
+    .message {
+      text-align: left;
+    }
+  }
+
+  hr.light {
+    border-color: #dfdbd4;
+    width: 87%;
+    margin: 0 auto;
+    margin-top: 48px;
+
+    &.bottom {
+      margin-top: 102px;
+    }
+  }
 }
