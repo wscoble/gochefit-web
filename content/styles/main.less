@@ -1065,10 +1065,70 @@ body.checkout {
     border-color: #dfdbd4;
     width: 87%;
     margin: 0 auto;
-    margin-top: 48px;
+    margin: 48px 0;
 
     &.bottom {
-      margin-top: 102px;
+      position: relative;
+      top: -48px;
+    }
+  }
+
+  .container {
+    position: relative;
+    
+    .address-form {
+      max-width: 566px;
+
+      input {
+        padding: 8px;
+        margin-bottom: 22px;
+
+        &.first-name, &.last-name, &.email, &.phone {
+          width: 48%;
+        }
+
+        &.first-name, &.email, &.city, &.state {
+          margin-right: 4%;
+        }
+
+        &.address {
+          width: 100%;
+        }
+
+        &.city {
+          width: 48%;
+          margin-right: 4%;
+        }
+
+        &.state {
+          width: 10%;
+          margin-right: 4%
+        }
+
+        &.zip {
+          width: 34%;
+        }
+      }
+    }
+
+    .shipping-selector {
+
+    }
+
+    .subtotal {
+
+    }
+
+    .taxes {
+
+    }
+
+    .shipping-cost {
+
+    }
+
+    .cart-total {
+
     }
   }
 }
