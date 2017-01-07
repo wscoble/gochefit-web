@@ -3,17 +3,18 @@ let helpers = require('../helpers')
 let React = require('react')
 import QuantityWidget from './quantity_widget.jsx' // eslint-disable-line
 
-module.exports = React.createClass({
-  getInitialState: () => {
-    return {
+export default class PriceCartWidget extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
       quantity: 1,
       selectedOptions: {},
       addMessage: 'ADD TO CART',
       adjustments: {}
     }
-  },
+  }
 
-  componentDidMount: () => {
+  componentDidMount () {
     let options = this.props.options
 
     for (let optionName in options) {
@@ -21,68 +22,66 @@ module.exports = React.createClass({
         if (options[optionName][option]['Price'] === 0) {
           let optionState = {}
           optionState[optionName] = option
-          this.setState({
-            selectedOptions: optionState
-          })
+          this.setState({selectedOptions: optionState})
           this.setState({adjustments: options[optionName][option]})
         }
       }
     }
-  },
+  }
 
-  handleQtyIncrease: () => {
+  handleQtyIncrease () {
     this.setState((p, props) => {
       return {quantity: p.quantity + 1}
     })
-  },
+  }
 
-  handleQtyDecrease: () => {
+  handleQtyDecrease () {
     if (this.state.quantity > 1) {
       this.setState((p, props) => {
         return {quantity: p.quantity - 1}
       })
     }
-  },
+  }
 
-  handleAddToCart: () => {
+  handleAddToCart () {
     let item = {
       name: this.props.name,
       basePrice: this.props.basePrice,
       adjustments: this.state.adjustments,
       options: this.props.options,
       selectedOptions: this.state.selectedOptions,
-      thumbnailUrl: this.props.thumbnailUrl
+      thumbnailUrl: this.props.thumbnailUrl,
+      itemUrl: window.location.pathname,
+      shortDescription: this.props.shortDescription
     }
     item.hash = md5(JSON.stringify(item))
     item.quantity = this.state.quantity
     this.props.events.cartItemAdded.dispatch(item)
     this.setState({addMessage: 'ADDED'})
 
-    let self = this
     setTimeout(() => {
-      self.setState({addMessage: 'ADD TO CART'})
+      this.setState({addMessage: 'ADD TO CART'})
     }, 5000)
-  },
+  }
 
-  handleOptionSelect: (name, value, changes) => {
-    let self = this
+  handleOptionSelect (name, value, changes) {
     return () => {
       let selectedOptionsChange = {}
       selectedOptionsChange[name] = value
-      self.setState({selectedOptions: selectedOptionsChange})
-      self.setState({adjustments: changes})
+      this.setState({selectedOptions: selectedOptionsChange})
+      this.setState({adjustments: changes})
     }
-  },
+  }
 
-  render: () => {
+  render () {
+    console.log(this.props)
     let macrosBlock, optionsBlock
-    let self = this
-    let adjustments = self.state.adjustments
-    let macros = self.props.macros
-    let options = self.props.options
+    let adjustments = this.state.adjustments
+    let macros = this.props.macros
+    let options = this.props.options
 
     // update price
-    let price = (parseFloat(self.props.basePrice) + adjustments['Price']).toFixed(2)
+    let price = (parseFloat(this.props.basePrice) + adjustments['Price']).toFixed(2)
 
     // create macros block if we have macros data
     if (helpers.isEmptyObject(macros)) {
@@ -119,8 +118,8 @@ module.exports = React.createClass({
                    <input id={id}
                           type="radio"
                           name="item-options"
-                          checked={self.state.selectedOptions[optionName] === optionValue}
-                          onClick={self.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])} />
+                          checked={this.state.selectedOptions[optionName] === optionValue}
+                          onClick={(e) => this.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])(e)} />
                  </span>
         })
         return <span className="option-wrapper">
@@ -136,14 +135,14 @@ module.exports = React.createClass({
     // render the final widget
     return <div className="price-cart-widget">
              <div className="price">${price}</div>
-             <QuantityWidget quantity={self.state.quantity} handleQtyIncrease={self.handleQtyIncrease} handleQtyDecrease={self.handleQtyDecrease} />
+             <QuantityWidget quantity={this.state.quantity} handleQtyIncrease={() => this.handleQtyIncrease()} handleQtyDecrease={() => this.handleQtyDecrease()} />
              <div className="get-started">
                <span className="wrapper">
-                 <a onClick={self.handleAddToCart}>{self.state.addMessage}</a>
+                 <a onClick={(e) => this.handleAddToCart(e)}>{this.state.addMessage}</a>
                </span>
              </div>
              {macrosBlock}
              {optionsBlock}
            </div>
   }
-})
+}

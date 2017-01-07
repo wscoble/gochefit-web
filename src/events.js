@@ -7,6 +7,7 @@ export default {
   // User events
   authenticated: new Signal(), // gets AWS.config.credentials
   datasetOpened: new Signal(), // gets the Cognito dataset
+  lambdaAvailable: new Signal(),
   cartDatasetOpened: new Signal(), // gets the Cognito cart dataset
   messageSendRequested: new Signal(), // gets name, email, message
   messageSent: new Signal(), // gets a success message

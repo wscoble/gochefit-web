@@ -1,7 +1,8 @@
 import CartWidget from './views/cart_widget.jsx'
-let PriceCartWidget = require('./views/price_cart_widget.jsx')
+import PriceCartWidget from './views/price_cart_widget.jsx'
 import CheckoutItemsWidget from './views/checkout_items_widget.jsx'
 import ShippingWidget from './views/shipping_widget.jsx'
+
 let ReactDOM = require('react-dom')
 let React = require('react')
 
@@ -19,6 +20,7 @@ module.exports = (events) => {
     let basePrice = priceCartWidgetElement.getAttribute('data-base-price')
     let name = priceCartWidgetElement.getAttribute('data-name')
     let thumbnailUrl = priceCartWidgetElement.getAttribute('data-thumbnail-url')
+    let shortDescription = priceCartWidgetElement.getAttribute('data-short-description')
     let options = {}
     let macros = {}
     if (priceCartWidgetElement.getAttribute('data-options') !== '') {
@@ -34,7 +36,8 @@ module.exports = (events) => {
       options: options,
       macros: macros,
       thumbnailUrl: thumbnailUrl,
-      name: name
+      name: name,
+      shortDescription: shortDescription
     }
 
     ReactDOM.render(React.createElement(PriceCartWidget, props), priceCartWidgetElement)

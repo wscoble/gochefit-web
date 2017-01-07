@@ -12,7 +12,7 @@ let analyticsOptions = {
 module.exports = (events) => {
   AWS.config.credentials.get(() => {
     let lambda = new AWS.Lambda()
-    console.log('calling debug.dispatch with got aws credentials and', AWS.config.credentials)
+    events.lambdaAvailable.dispatch(lambda)
     events.debug.dispatch('got aws credentials', AWS.config.credentials)
 
     // Analytics setup

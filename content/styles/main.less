@@ -964,6 +964,10 @@ body.checkout {
       color: #a19a8f;
       padding-bottom: 12px;
       font-weight: 300;
+
+      &.quantity {
+        width: 80px;
+      }
     }
 
     tr:first-of-type td {
@@ -991,29 +995,51 @@ body.checkout {
         }
       }
 
+      &.name {
+        small {
+          p {
+            padding-top: 12px;
+          }
+        }
+
+        .short-description {
+          padding-top: 12px;
+          padding-left: 12px;
+          text-align: left;
+        }
+      }
+
       &.price {
         width: 224px;
       }
 
       &.quantity {
-        width: 72px;
+        width: 80px;
       }
 
       div.quantity {
         position: relative;
-        text-align: center;
+        text-align: left;
+        width: 80px;
+        left: 0;
         .above {
           position: absolute;
           cursor: pointer;
           top: -42px;
+          padding-left: 50%;
+          margin-left: -10px;
         }
         .value {
           position: absolute;
+          width: 100%;
+          text-align: center;
         }
         .below {
-          position: absolute;;
+          position: absolute;
           cursor: pointer;
           bottom: -58px;
+          padding-left: 50%;
+          margin-left: -10px;
         }
       }
     }
