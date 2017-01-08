@@ -143,47 +143,40 @@ export default class ShippingWidget extends React.Component {
           })
         }).then((update) => {
           return new Promise((resolve, reject) => {
-            const checkForShippingInfoErrors = prevState && [
-              'firstName',
-              'lastName',
-              'email',
-              'phone',
-              'address1',
-              'city',
-              'state',
-              'zip'
-            ].reduce((a, b) => a || this.state[b] !== prevState[b], false)
-            if (checkForShippingInfoErrors) {
-              const shippingValues = {
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                email: this.state.email,
-                phone: this.state.phone,
-                address1: this.state.address1,
-                city: this.state.city,
-                state: this.state.state,
-                zip: this.state.zip
-              }
-              let params = {
-                FunctionName: 'ShippingValidator',
-                InvocationType: 'RequestResponse',
-                Payload: JSON.stringify(shippingValues)
-              }
-              lambda.invoke(params, (err, result) => {
-                if (err) {
-                  this.props.events.errored.dispatch(err)
-                } else {
-                  const data = JSON.parse(result.Payload)
-                  update['errors'] = data.errors
-                  resolve(update)
-                }
-              })
-            } else {
-              resolve(update)
+            const shippingValues = {
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              email: this.state.email,
+              phone: this.state.phone,
+              address1: this.state.address1,
+              city: this.state.city,
+              state: this.state.state,
+              zip: this.state.zip
             }
+            let params = {
+              FunctionName: 'ShippingValidator',
+              InvocationType: 'RequestResponse',
+              Payload: JSON.stringify(shippingValues)
+            }
+            lambda.invoke(params, (err, result) => {
+              if (err) {
+                this.props.events.errored.dispatch(err)
+              } else {
+                const data = JSON.parse(result.Payload)
+                if (!data.errors.map(error => this.state.errors.indexOf(error) > -1).reduce((a, b) => a || b, false)) {
+                  if (data.errors.length === 0 && this.state.errors.length === 0) {
+                    // do not update
+                  } else {
+                    update['errors'] = data.errors
+                  }
+                }
+                resolve(update)
+              }
+            })
           })
         }).then((update) => {
           if (Object.keys(update).length > 0) {
+            console.log('update is', update)
             this.setState(update)
           }
         })
