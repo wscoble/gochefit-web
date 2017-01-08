@@ -32,7 +32,7 @@ export default class ShippingWidget extends React.Component {
       shippingCost: 0.00,
       shippingMessage: '-',
       freeShipping: true,
-      errors: []
+      errors: ['initial']
     }
   }
 
@@ -251,6 +251,18 @@ export default class ShippingWidget extends React.Component {
       shipping = <span className='value'>{this.state.shippingMessage}</span>
     }
 
+    let next = ''
+    if (this.state.errors.length === 0) {
+      next = <div className='next'>
+        <div className='get-started'>
+          <span className='wrapper'>
+            <a onClick={(e) => this.handleConfirmation(e)}>3. CONFIRMATION
+              <img src='/assets/cart-next.png'/></a>
+          </span>
+        </div>
+      </div>
+    }
+
     let hasError = (field) => {
       if (this.state.errors.indexOf(field) > -1) {
         return 'error'
@@ -345,14 +357,8 @@ export default class ShippingWidget extends React.Component {
         <span className='title'>Total</span>
         <span className='value'>{total}</span>
       </div>
-      <div className='next'>
-        <div className='get-started'>
-          <span className='wrapper'>
-            <a onClick={(e) => this.handleConfirmation(e)}>3. CONFIRMATION
-              <img src='/assets/cart-next.png'/></a>
-          </span>
-        </div>
-      </div>
+
+      {next}
 
       <div className='back'>
         <a href='/checkout-1.html'>
