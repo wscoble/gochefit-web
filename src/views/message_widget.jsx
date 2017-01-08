@@ -1,7 +1,7 @@
 let React = require('react')
 
 export default class MessageWidget extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       successMessage: null,
@@ -12,7 +12,7 @@ export default class MessageWidget extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     let self = this
     this.props.events.messageSent.add((successMessage) => {
       self.setState({successMessage: successMessage})
@@ -23,36 +23,32 @@ export default class MessageWidget extends React.Component {
     })
   }
 
-  sendMessage () {
-    this.props.events.messageSendRequested.dispatch(
-      this.state.name,
-      this.state.email,
-      this.state.message
-    )
+  sendMessage() {
+    this.props.events.messageSendRequested.dispatch(this.state.name, this.state.email, this.state.message)
   }
 
-  handleNameChange (event) {
+  handleNameChange(event) {
     this.setState({name: event.target.value})
   }
 
-  handleEmailChange (event) {
+  handleEmailChange(event) {
     this.setState({email: event.target.value})
   }
 
-  handleMessageChange (event) {
+  handleMessageChange(event) {
     this.setState({message: event.target.value})
   }
 
-  render () {
+  render() {
     return <span className='message-widget'>
-             <input type='text' name='name' placeholder='Name' onChange={(e) => this.handleNameChange(e)} />
-             <input type='text' name='email' placeholder='Email' onChange={(e) => this.handleEmailChange(e)} />
-             <textarea name='message' placeholder='Message' onChange={(e) => this.handleMessageChange(e)}></textarea>
-             <div className='send-message-wrapper'>
-               <span className='wrapper'>
-                 <a onClick={() => this.sendMessage()}>{this.props.buttonText}</a>
-               </span>
-             </div>
-           </span>
+      <input type='text' name='name' placeholder='Name' onChange={(e) => this.handleNameChange(e)}/>
+      <input type='text' name='email' placeholder='Email' onChange={(e) => this.handleEmailChange(e)}/>
+      <textarea name='message' placeholder='Message' onChange={(e) => this.handleMessageChange(e)}></textarea>
+      <div className='send-message-wrapper'>
+        <span className='wrapper'>
+          <a onClick={() => this.sendMessage()}>{this.props.buttonText}</a>
+        </span>
+      </div>
+    </span>
   }
 }

@@ -1,5 +1,4 @@
 let helpers = require('./helpers')
-
 module.exports = (events) => {
   events.cartDatasetOpened.add((dataset) => {
     let promisifyCallback = (resolve, reject, cb) => {
@@ -13,7 +12,6 @@ module.exports = (events) => {
         }
       }
     }
-
     let getDataset = (name) => {
       return new Promise((resolve, reject) => {
         dataset.get(name, promisifyCallback(resolve, reject, (data) => {
@@ -24,13 +22,11 @@ module.exports = (events) => {
         }))
       })
     }
-
     let putDataset = (name, data) => {
       return new Promise((resolve, reject) => {
         dataset.put(name, JSON.stringify(data), promisifyCallback(resolve, reject))
       })
     }
-
     let dispatchDebug = (name) => {
       return (value) => {
         return new Promise((resolve, reject) => {
@@ -40,21 +36,19 @@ module.exports = (events) => {
         })
       }
     }
-
     let dispatchError = (error) => {
       events.errored.dispatch(error)
     }
-
     let dispatchCartUpdated = (cart) => {
-      events.cartUpdated.dispatch({items: cart, totalItems: helpers.getItemCountFromCart(cart)})
+      events.cartUpdated.dispatch({
+        items: cart,
+        totalItems: helpers.getItemCountFromCart(cart)
+      })
       return cart
     }
-
     // get existing cart items and dispatch the updated event
     getDataset('items').then(dispatchCartUpdated).then(dispatchDebug('initial cart updated')).catch(dispatchError)
-
     // wire up cart events
-
     events.cartItemAdded.add((item) => {
       getDataset('items').then((cart) => {
         if (cart) {
@@ -70,53 +64,37 @@ module.exports = (events) => {
           cart = [item]
         }
         return cart
-      })
-      .then((cart) => {
+      }).then((cart) => {
         return putDataset('items', cart).then((record) => {
           dataset.synchronize()
           return cart
         })
-      })
-      .then(dispatchDebug('cart updated'))
-      .then(dispatchCartUpdated)
-      .catch(dispatchError)
+      }).then(dispatchDebug('cart updated')).then(dispatchCartUpdated).catch(dispatchError)
     })
-
     events.cartItemDeleted.add((itemHash) => {
-      getDataset('items')
-        .then((cart) => {
-          return cart.filter((item) => item.hash !== itemHash)
-        })
-        .then((cart) => {
-          return putDataset('items', cart)
-            .then((record) => {
-              dataset.synchronize()
-              return cart
-            })
-        })
-        .then(dispatchCartUpdated)
-        .catch(dispatchError)
-    })
-
-    events.cartItemUpdated.add((item, quantity) => {
-      getDataset('items')
-        .then((cart) => {
-          let itemsHashes = cart.map((i) => i.hash)
-          let hashIndex = itemsHashes.indexOf(item.hash)
-          if (hashIndex > -1) {
-            cart[hashIndex].quantity = quantity
-          }
+      getDataset('items').then((cart) => {
+        return cart.filter((item) => item.hash !== itemHash)
+      }).then((cart) => {
+        return putDataset('items', cart).then((record) => {
+          dataset.synchronize()
           return cart
         })
-        .then((cart) => {
-          return putDataset('items', cart)
-            .then((record) => {
-              dataset.synchronize()
-              return cart
-            })
+      }).then(dispatchCartUpdated).catch(dispatchError)
+    })
+    events.cartItemUpdated.add((item, quantity) => {
+      getDataset('items').then((cart) => {
+        let itemsHashes = cart.map((i) => i.hash)
+        let hashIndex = itemsHashes.indexOf(item.hash)
+        if (hashIndex > -1) {
+          cart[hashIndex].quantity = quantity
+        }
+        return cart
+      }).then((cart) => {
+        return putDataset('items', cart).then((record) => {
+          dataset.synchronize()
+          return cart
         })
-        .then(dispatchCartUpdated)
-        .catch(dispatchError)
+      }).then(dispatchCartUpdated).catch(dispatchError)
     })
   })
 }

@@ -3,7 +3,6 @@ module.exports = (events) => {
   if ($('.checkout-wrapper').length === 0) {
     return
   }
-
   // we are on the checkout pages, do stuff!
   events.cartUpdated.add((cart) => {
     let items = 'item'
@@ -11,7 +10,6 @@ module.exports = (events) => {
       items = 'items'
     }
     $('.items-message .green').html(cart.totalItems + ' ' + items)
-
     // calculate subtotal
     let total = 0
     for (let i = 0; i < cart.items.length; i++) {

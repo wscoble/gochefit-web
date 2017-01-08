@@ -3,16 +3,13 @@ module.exports = (events) => {
   if ($('.menu-wrapper').length === 0) {
     return
   }
-
   // we are on the menu page, let's do stuff!
-
   $('h1').click((e) => {
     $('.section').show()
     $('.section-selectors .selector').each(() => {
       $(this).removeClass('on')
     })
   })
-
   $('.section-selectors .selector').click((e) => {
     let section = $(this).attr('data-section')
     $('.section').each(() => {

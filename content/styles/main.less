@@ -935,6 +935,7 @@ body.checkout {
   margin: 0 auto;
   padding-top: 40px;
   text-align: center;
+  padding-bottom: 80px;
 
   h1 {
     font-size: 72px;
@@ -1045,20 +1046,36 @@ body.checkout {
     }
   }
 
-  .subtotal {
-    width: 100%;
-    text-align: right;
-    padding-right: 5%;
-    margin-top: 75px;
-    color: #a19a8f;
+  .subtotal, .total {
+    &.large {
+      width: 100%;
+      text-align: right;
+      padding-right: 5%;
+      margin-top: 75px;
+      color: #a19a8f;
+
+      .value {
+        font-size: 48px;
+        padding: 24px;
+        background: url(/assets/price-bg.png) center center no-repeat;
+        color: white;
+        letter-spacing: -3px;
+        margin-left: 24px;
+      }
+    }
+  }
+
+  .total.large {
+    position: absolute;
+    right: 0;
+    bottom: 0;
 
     .value {
-      font-size: 48px;
-      padding: 24px;
-      background: url(/assets/price-bg.png) center center no-repeat;
-      color: white;
-      letter-spacing: -3px;
-      margin-left: 24px;
+      &:before {
+        content: "$";
+        color: white;
+        margin-right: -1px;
+      }
     }
   }
 
@@ -1083,7 +1100,12 @@ body.checkout {
     }
 
     .message {
-      text-align: left;
+      width: 80%;
+      margin: 0 auto;
+      p {
+        text-align: left;
+        padding-bottom: 6px;
+      }
     }
   }
 
@@ -1094,66 +1116,189 @@ body.checkout {
 
     &.bottom {
       position: relative;
-      top: -48px;
+      top: 342px;
     }
   }
 
-  .container {
+  #shipping-widget {
     position: relative;
+    top: -40px;
 
-    .address-form {
-      max-width: 566px;
+    .container {
+      position: relative;
+      height: 472px;
 
-      input {
-        padding: 8px;
-        margin-bottom: 22px;
+      .address-form {
+        max-width: 566px;
+        position: absolute;
+        left: 0;
 
-        &.first-name, &.last-name, &.email, &.phone {
-          width: 48%;
+        input {
+          padding: 8px;
+          margin-bottom: 22px;
+
+          &.error {
+            border-color: orangered;
+          }
+
+          &.success {
+            border-color: lightgreen;
+          }
+
+          &.first-name, &.last-name, &.email, &.phone {
+            width: 48%;
+          }
+
+          &.first-name, &.email, &.city, &.state {
+            margin-right: 4%;
+          }
+
+          &.address {
+            width: 100%;
+          }
+
+          &.city {
+            width: 48%;
+            margin-right: 4%;
+          }
+
+          &.state {
+            width: 10%;
+            margin-right: 4%
+          }
+
+          &.zip {
+            width: 34%;
+          }
         }
+      }
 
-        &.first-name, &.email, &.city, &.state {
-          margin-right: 4%;
-        }
+      .shipping-selector {
 
-        &.address {
+      }
+
+      .subtotal {
+        position: absolute;
+        right: 28%;
+        width: 13%;
+
+        .title {
+          position: absolute;
           width: 100%;
+          text-align: center;
+          left: 0;
+          color: #a19a8f;
+          font-size: 22px;
         }
+        .value {
+          position: absolute;
+          top: 36px;
+          width: 100%;
+          text-align: center;
+          left: 0;
+          font-size: 42px;
+          letter-spacing: -3px;
 
-        &.city {
-          width: 48%;
-          margin-right: 4%;
+          &:before {
+            content: "$";
+            color: #d1cabe;
+            margin-right: -3px;
+          }
         }
+      }
 
-        &.state {
-          width: 10%;
-          margin-right: 4%
+      .taxes {
+        position: absolute;
+        right: 9%;
+        width: 13%;
+
+        .title {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          left: 0;
+          color: #a19a8f;
+          font-size: 22px;
         }
+        .value {
+          position: absolute;
+          top: 36px;
+          width: 100%;
+          text-align: center;
+          left: 0;
+          font-size: 42px;
+          letter-spacing: -3px;
 
-        &.zip {
-          width: 34%;
+          &:before {
+            content: "$";
+            color: #d1cabe;
+            margin-right: -3px;
+          }
+        }
+      }
+
+      .shipping-cost {
+        position: absolute;
+        top: 200px;
+        right: 9%;
+        width: 13%;
+
+        .title {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          left: 0;
+          color: #a19a8f;
+          font-size: 22px;
+        }
+        .value {
+          position: absolute;
+          top: 36px;
+          width: 100%;
+          text-align: center;
+          left: 0;
+          font-size: 42px;
+          letter-spacing: -3px;
+
+          &.dollar {
+            &:before {
+              content: "$";
+              color: #d1cabe;
+              margin-right: -3px;
+            }
+          }
+        }
+      }
+
+      .total {
+        .title {
+          font-size: 22px;
         }
       }
     }
 
-    .shipping-selector {
+    .next {
+      position: absolute;
+      right: 0;
+      bottom: -95px;
 
+      img {
+        padding-left: 4px;
+      }
+
+      a {
+        cursor: pointer;
+      }
     }
 
-    .subtotal {
+    .back {
+      position: absolute;
+      bottom: -95px;
+      left: 0;
 
-    }
-
-    .taxes {
-
-    }
-
-    .shipping-cost {
-
-    }
-
-    .cart-total {
-
+      img {
+        padding-right: 4px;
+      }
     }
   }
 }

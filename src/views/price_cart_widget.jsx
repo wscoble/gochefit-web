@@ -4,7 +4,7 @@ let React = require('react')
 import QuantityWidget from './quantity_widget.jsx' // eslint-disable-line
 
 export default class PriceCartWidget extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       quantity: 1,
@@ -14,7 +14,7 @@ export default class PriceCartWidget extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     let options = this.props.options
 
     for (let optionName in options) {
@@ -23,27 +23,32 @@ export default class PriceCartWidget extends React.Component {
           let optionState = {}
           optionState[optionName] = option
           this.setState({selectedOptions: optionState})
-          this.setState({adjustments: options[optionName][option]})
+          this.setState({adjustments: options[optionName][option]
+          })
         }
       }
     }
   }
 
-  handleQtyIncrease () {
+  handleQtyIncrease() {
     this.setState((p, props) => {
-      return {quantity: p.quantity + 1}
+      return {
+        quantity: p.quantity + 1
+      }
     })
   }
 
-  handleQtyDecrease () {
+  handleQtyDecrease() {
     if (this.state.quantity > 1) {
       this.setState((p, props) => {
-        return {quantity: p.quantity - 1}
+        return {
+          quantity: p.quantity - 1
+        }
       })
     }
   }
 
-  handleAddToCart () {
+  handleAddToCart() {
     let item = {
       name: this.props.name,
       basePrice: this.props.basePrice,
@@ -64,7 +69,7 @@ export default class PriceCartWidget extends React.Component {
     }, 5000)
   }
 
-  handleOptionSelect (name, value, changes) {
+  handleOptionSelect(name, value, changes) {
     return () => {
       let selectedOptionsChange = {}
       selectedOptionsChange[name] = value
@@ -73,9 +78,10 @@ export default class PriceCartWidget extends React.Component {
     }
   }
 
-  render () {
+  render() {
     console.log(this.props)
-    let macrosBlock, optionsBlock
+    let macrosBlock,
+      optionsBlock
     let adjustments = this.state.adjustments
     let macros = this.props.macros
     let options = this.props.options
@@ -96,12 +102,15 @@ export default class PriceCartWidget extends React.Component {
         if (adjustments[macroName]) {
           value += adjustments[macroName]
         }
-        return <p><span className="name">{macroName}</span><span className="value">{value}{measurement}</span></p>
+        return <p>
+          <span className="name">{macroName}</span>
+          <span className="value">{value}{measurement}</span>
+        </p>
       })
       macrosBlock = <div className="macros">
-                      <h2>MACROS</h2>
-                      {macrosList}
-                    </div>
+        <h2>MACROS</h2>
+        {macrosList}
+      </div>
     }
 
     // create options block if we have options data
@@ -114,35 +123,32 @@ export default class PriceCartWidget extends React.Component {
           let id = [optionName, optionValue].join('-')
 
           return <span className="option-value">
-                   <label htmlFor={id}>{optionValue}</label>
-                   <input id={id}
-                          type="radio"
-                          name="item-options"
-                          checked={this.state.selectedOptions[optionName] === optionValue}
-                          onClick={(e) => this.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])(e)} />
-                 </span>
+            <label htmlFor={id}>{optionValue}</label>
+            <input id={id} type="radio" name="item-options" checked={this.state.selectedOptions[optionName] === optionValue} onClick={(e) => this.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])(e)}/>
+          </span>
         })
         return <span className="option-wrapper">
-                 <span className="option-name">{optionName}</span> {optionChanges}
-               </span>
+          <span className="option-name">{optionName}</span>
+          {optionChanges}
+        </span>
       })
       optionsBlock = <div className="options">
-                       <h2>OPTIONS</h2>
-                       {optionsList}
-                     </div>
+        <h2>OPTIONS</h2>
+        {optionsList}
+      </div>
     }
 
     // render the final widget
     return <div className="price-cart-widget">
-             <div className="price">${price}</div>
-             <QuantityWidget quantity={this.state.quantity} handleQtyIncrease={() => this.handleQtyIncrease()} handleQtyDecrease={() => this.handleQtyDecrease()} />
-             <div className="get-started">
-               <span className="wrapper">
-                 <a onClick={(e) => this.handleAddToCart(e)}>{this.state.addMessage}</a>
-               </span>
-             </div>
-             {macrosBlock}
-             {optionsBlock}
-           </div>
+      <div className="price">${price}</div>
+      <QuantityWidget quantity={this.state.quantity} handleQtyIncrease={() => this.handleQtyIncrease()} handleQtyDecrease={() => this.handleQtyDecrease()}/>
+      <div className="get-started">
+        <span className="wrapper">
+          <a onClick={(e) => this.handleAddToCart(e)}>{this.state.addMessage}</a>
+        </span>
+      </div>
+      {macrosBlock}
+      {optionsBlock}
+    </div>
   }
 }

@@ -1,6 +1,5 @@
 /* global $ */
 require('./vendor/jquery.slides')
-
 module.exports = (events) => {
   let e = $('#slides')
   if (e) {
@@ -22,7 +21,6 @@ module.exports = (events) => {
         restartDelay: 2500
       }
     }
-
     e.slidesjs(options)
   }
 }
