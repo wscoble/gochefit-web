@@ -1,5 +1,7 @@
 import React from 'react'
 
+let syncShippingInfoTimeout
+
 export default class ShippingWidget extends React.Component {
   constructor(props) {
     super(props)
@@ -14,6 +16,12 @@ export default class ShippingWidget extends React.Component {
       })
     })
     this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address1: '',
+      address2: '',
       city: '',
       finalCity: '',
       state: 'NV',
@@ -52,40 +60,15 @@ export default class ShippingWidget extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.lambdaPromise.then(lambda => {
-      return new Promise((resolve, reject) => {
-        let update = {}
-        if (this.state.finalCity !== prevState.finalCity && this.state.subtotal > 0) {
-          let params = {
-            FunctionName: 'ShippingCalculator',
-            InvocationType: 'RequestResponse',
-            Payload: JSON.stringify({city: this.state.finalCity, subtotal: this.state.subtotal})
-          }
-
-          lambda.invoke(params, (err, data) => {
-            if (err) {
-              this.props.events.errored.dispatch(err)
-            } else {
-              let result = JSON.parse(data.Payload)
-              update['shippingCost'] = result.shippingCost
-              update['shippingMessage'] = result.freeShipping
-                ? 'Free!'
-                : result.shippingCost.toFixed(2)
-              update['freeShipping'] = result.freeShipping
-              resolve(update)
-            }
-          })
-        } else {
-          resolve(update)
-        }
-      }).then((update) => {
+    let doUpdates = () => {
+      this.lambdaPromise.then(lambda => {
         return new Promise((resolve, reject) => {
-          // if we have an updated shipping cost or if we haven't calculated taxes yet
-          if ((update.hasOwnProperty('shippingCost')) || (this.state.taxes === 0 && this.state.total === 0 && this.state.subtotal !== 0)) {
+          let update = {}
+          if (this.state.finalCity !== prevState.finalCity && this.state.subtotal > 0) {
             let params = {
-              FunctionName: 'TaxCalculator',
+              FunctionName: 'ShippingCalculator',
               InvocationType: 'RequestResponse',
-              Payload: JSON.stringify({subtotal: this.state.subtotal})
+              Payload: JSON.stringify({city: this.state.finalCity, subtotal: this.state.subtotal})
             }
 
             lambda.invoke(params, (err, data) => {
@@ -93,55 +76,125 @@ export default class ShippingWidget extends React.Component {
                 this.props.events.errored.dispatch(err)
               } else {
                 let result = JSON.parse(data.Payload)
-                update['taxes'] = result.taxes
-                update['total'] = result.total
-                if (update.hasOwnProperty('shippingCost')) {
-                  update['total'] += update.shippingCost
-                }
+                update['shippingCost'] = result.shippingCost
+                update['shippingMessage'] = result.freeShipping
+                  ? 'Free!'
+                  : result.shippingCost.toFixed(2)
+                update['freeShipping'] = result.freeShipping
                 resolve(update)
               }
             })
           } else {
             resolve(update)
           }
-        })
-      }).then((update) => {
-        if (Object.keys(update).length > 0) {
-          this.setState(update)
-        }
-      })
-    })
-    this.shippingDatasetPromise.then(dataset => {
-      const shippingValues = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        phone: this.state.phone,
-        address1: this.state.address1,
-        address2: this.state.address2,
-        city: this.state.city,
-        state: this.state.state,
-        zip: this.state.zip
-      }
-      dataset.put('shipping-info', JSON.stringify(shippingValues), (err, newRecords) => {
-        if (err) {
-          this.props.events.errored.dispatch(err)
-        } else {
-          dataset.synchronize({
-            onFailure: (err) => {
-              this.props.events.errored.dispatch(err)
-            },
-            onConflict: (dataset, conflicts, callback) => {
-              let resolved = []
-              for (let i = 0; i < conflicts.length; i++) {
-                resolved.push(conflicts[i].resolveWithLocalRecord())
+        }).then((update) => {
+          return new Promise((resolve, reject) => {
+            // if we have an updated shipping cost or if we haven't calculated taxes yet
+            if ((update.hasOwnProperty('shippingCost')) || (this.state.taxes === 0 && this.state.total === 0 && this.state.subtotal !== 0)) {
+              let params = {
+                FunctionName: 'TaxCalculator',
+                InvocationType: 'RequestResponse',
+                Payload: JSON.stringify({subtotal: this.state.subtotal})
               }
-              dataset.resolve(resolved, () => callback(true))
+
+              lambda.invoke(params, (err, data) => {
+                if (err) {
+                  this.props.events.errored.dispatch(err)
+                } else {
+                  let result = JSON.parse(data.Payload)
+                  update['taxes'] = result.taxes
+                  update['total'] = result.total
+                  if (update.hasOwnProperty('shippingCost')) {
+                    update['total'] += update.shippingCost
+                  }
+                  resolve(update)
+                }
+              })
+            } else {
+              resolve(update)
             }
           })
-        }
+        }).then((update) => {
+          return new Promise((resolve, reject) => {
+            const checkForShippingInfoErrors = prevState && [
+              'firstName',
+              'lastName',
+              'email',
+              'phone',
+              'address1',
+              'city',
+              'state',
+              'zip'
+            ].reduce((a, b) => a || this.state[b] !== prevState[b], false)
+            if (checkForShippingInfoErrors) {
+              const shippingValues = {
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                email: this.state.email,
+                phone: this.state.phone,
+                address1: this.state.address1,
+                city: this.state.city,
+                state: this.state.state,
+                zip: this.state.zip
+              }
+              let params = {
+                FunctionName: 'ShippingValidator',
+                InvocationType: 'RequestResponse',
+                Payload: JSON.stringify(shippingValues)
+              }
+              lambda.invoke(params, (err, result) => {
+                if (err) {
+                  this.props.events.errored.dispatch(err)
+                } else {
+                  const data = JSON.parse(result.Payload)
+                  update['errors'] = data.errors
+                  resolve(update)
+                }
+              })
+            } else {
+              resolve(update)
+            }
+          })
+        }).then((update) => {
+          if (Object.keys(update).length > 0) {
+            this.setState(update)
+          }
+        })
       })
-    })
+      this.shippingDatasetPromise.then(dataset => {
+        const shippingValues = {
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          email: this.state.email,
+          phone: this.state.phone,
+          address1: this.state.address1,
+          address2: this.state.address2,
+          city: this.state.city,
+          state: this.state.state,
+          zip: this.state.zip
+        }
+        dataset.put('shipping-info', JSON.stringify(shippingValues), (err, newRecords) => {
+          if (err) {
+            this.props.events.errored.dispatch(err)
+          } else {
+            dataset.synchronize({
+              onFailure: (err) => {
+                this.props.events.errored.dispatch(err)
+              },
+              onConflict: (dataset, conflicts, callback) => {
+                let resolved = []
+                for (let i = 0; i < conflicts.length; i++) {
+                  resolved.push(conflicts[i].resolveWithLocalRecord())
+                }
+                dataset.resolve(resolved, () => callback(true))
+              }
+            })
+          }
+        })
+      })
+    }
+    clearTimeout(syncShippingInfoTimeout)
+    syncShippingInfoTimeout = setTimeout(doUpdates, 300)
   }
 
   startCheckout() {
@@ -164,21 +217,8 @@ export default class ShippingWidget extends React.Component {
     console.log('CONFIRM')
   }
 
-  hasError(field) {
-    if (field === 'firstName') {
-      return 'error'
-    }
-    return ''
-  }
-
-  hasSuccess(field) {
-    if (field === 'city') {
-      return 'success'
-    }
-    return ''
-  }
-
   render() {
+    console.log('shipping widget state', this.state)
     let subtotal = this.state.subtotal.toFixed(2)
     let total = this.state.total.toFixed(2)
     let taxes = this.state.taxes.toFixed(2)
@@ -186,37 +226,58 @@ export default class ShippingWidget extends React.Component {
     if (this.state.freeShipping) {
       shipping = <span className='value'>{this.state.shippingMessage}</span>
     }
+
+    let hasError = (field) => {
+      if (this.state.errors.indexOf(field) > -1) {
+        return 'error'
+      } else {
+        return ''
+      }
+    }
+
+    let hasSuccess = (field) => {
+      if (hasError(field) === '') {
+        return 'success'
+      } else {
+        return ''
+      }
+    }
     return <div className='container'>
       <div className='address-form'>
         <input
           type='text'
-          className={`first-name ${this.hasError('firstName')} ${this.hasSuccess('firstName')}`}
+          className={`first-name ${hasError('firstName')} ${hasSuccess('firstName')}`}
           value={this.state.firstName}
           placeholder='First Name'
+          onBlur={(e) => this.handleAddressChange('firstName')(e)}
           onChange={(e) => this.handleAddressChange('firstName')(e)}/>
         <input
           type='text'
-          className={`last-name ${this.hasError('lastName')} ${this.hasSuccess('lastName')}`}
+          className={`last-name ${hasError('lastName')} ${hasSuccess('lastName')}`}
           value={this.state.lastName}
           placeholder='Last Name'
+          onBlue={(e) => this.handleAddressChange('lastName')(e)}
           onChange={(e) => this.handleAddressChange('lastName')(e)}/>
         <input
           type='email'
-          className={`email ${this.hasError('email')} ${this.hasSuccess('email')}`}
+          className={`email ${hasError('email')} ${hasSuccess('email')}`}
           value={this.state.email}
           placeholder='Email'
+          onBlur={(e) => this.handleAddressChange('email')(e)}
           onChange={(e) => this.handleAddressChange('email')(e)}/>
         <input
           type='phone'
-          className={`phone ${this.hasError('phone')} ${this.hasSuccess('phone')}`}
+          className={`phone ${hasError('phone')} ${hasSuccess('phone')}`}
           value={this.state.phone}
           placeholder='Phone'
+          onBlur={(e) => this.handleAddressChange('phone')(e)}
           onChange={(e) => this.handleAddressChange('phone')(e)}/>
         <input
           type='text'
-          className={`address ${this.hasError('address1')} ${this.hasSuccess('address1')}`}
+          className={`address ${hasError('address1')} ${hasSuccess('address1')}`}
           value={this.state.address1}
           placeholder='Address 1'
+          onBlur={(e) => this.handleAddressChange('address1')(e)}
           onChange={(e) => this.handleAddressChange('address1')(e)}/>
         <input
           type='text'
@@ -226,21 +287,22 @@ export default class ShippingWidget extends React.Component {
           onChange={(e) => this.handleAddressChange('address2')(e)}/>
         <input
           type='text'
-          className={`city ${this.hasError('city')} ${this.hasSuccess('city')}`}
+          className={`city ${hasError('city')} ${hasSuccess('city')}`}
           value={this.state.city}
           placeholder='City'
           onBlur={(e) => this.handleCityBlur(e)}
           onChange={(e) => this.handleAddressChange('city')(e)}/>
         <input
           type='text'
-          className='state'
+          className={`state ${hasError('state')} ${hasSuccess('state')}`}
           value={this.state.state}
           placeholder='State'/>
         <input
           type='text'
-          className={`zip ${this.hasError('zip')} ${this.hasSuccess('zip')}`}
+          className={`zip ${hasError('zip')} ${hasSuccess('zip')}`}
           value={this.state.zip}
           placeholder='Zip Code'
+          onBlur={(e) => this.handleAddressChange('zip')(e)}
           onChange={(e) => this.handleAddressChange('zip')(e)}/>
       </div>
       <div className='subtotal'>
