@@ -91,7 +91,7 @@ export default class ShippingWidget extends React.Component {
       this.lambdaPromise.then(lambda => {
         return new Promise((resolve, reject) => {
           let update = {}
-          if (this.state.finalCity !== prevState.finalCity && this.state.subtotal > 0) {
+          if ((this.state.shippingMessage === '-' || this.state.finalCity !== prevState.finalCity) && this.state.subtotal > 0) {
             let params = {
               FunctionName: 'ShippingCalculator',
               InvocationType: 'RequestResponse',
