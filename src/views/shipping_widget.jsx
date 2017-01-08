@@ -25,6 +25,7 @@ export default class ShippingWidget extends React.Component {
       city: '',
       finalCity: '',
       state: 'NV',
+      zip: '',
       subtotal: 0.00,
       taxes: 0.00,
       total: 0.00,
@@ -54,6 +55,32 @@ export default class ShippingWidget extends React.Component {
             data['finalCity'] = data['city']
             this.setState(data)
           }
+        }
+      })
+    })
+
+    this.lambdaPromise.then(lambda => {
+      const shippingValues = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        address1: this.state.address1,
+        city: this.state.city,
+        state: this.state.state,
+        zip: this.state.zip
+      }
+      let params = {
+        FunctionName: 'ShippingValidator',
+        InvocationType: 'RequestResponse',
+        Payload: JSON.stringify(shippingValues)
+      }
+      lambda.invoke(params, (err, result) => {
+        if (err) {
+          this.props.events.errored.dispatch(err)
+        } else {
+          const data = JSON.parse(result.Payload)
+          this.setState({errors: data.errors})
         }
       })
     })
@@ -214,7 +241,11 @@ export default class ShippingWidget extends React.Component {
   }
 
   handleConfirmation(event) {
-    console.log('CONFIRM')
+    if (this.state.errors.length > 0) {
+      alert('Please fix the boxes in red to continue')
+    } else {
+      window.location.path = '/checkout-3.html'
+    }
   }
 
   render() {
