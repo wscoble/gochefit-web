@@ -38,6 +38,20 @@ module.exports = (events) => {
         events.cartDatasetOpened.dispatch(dataset)
       }
     })
+    syncClient.openOrCreateDataset('shipping', (err, dataset) => {
+      if (err) {
+        events.errored.dispatch(err)
+      } else {
+        events.shippingDatasetOpened.dispatch(dataset)
+      }
+    })
+    syncClient.openOrCreateDataset('payment', (err, dataset) => {
+      if (err) {
+        events.errored.dispatch(err)
+      } else {
+        events.paymentDatasetOpened.dispatch(dataset)
+      }
+    })
     // Message events
     events.messageSendRequested.add((name, email, message) => {
       let params = {

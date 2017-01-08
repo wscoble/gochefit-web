@@ -41,9 +41,20 @@ export default class MessageWidget extends React.Component {
 
   render() {
     return <span className='message-widget'>
-      <input type='text' name='name' placeholder='Name' onChange={(e) => this.handleNameChange(e)}/>
-      <input type='text' name='email' placeholder='Email' onChange={(e) => this.handleEmailChange(e)}/>
-      <textarea name='message' placeholder='Message' onChange={(e) => this.handleMessageChange(e)}></textarea>
+      <input
+        type='text'
+        name='name'
+        placeholder='Name'
+        onChange={(e) => this.handleNameChange(e)}/>
+      <input
+        type='text'
+        name='email'
+        placeholder='Email'
+        onChange={(e) => this.handleEmailChange(e)}/>
+      <textarea
+        name='message'
+        placeholder='Message'
+        onChange={(e) => this.handleMessageChange(e)}></textarea>
       <div className='send-message-wrapper'>
         <span className='wrapper'>
           <a onClick={() => this.sendMessage()}>{this.props.buttonText}</a>

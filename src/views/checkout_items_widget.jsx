@@ -63,7 +63,10 @@ export default class CartTableWidget extends React.Component {
       let total = (price * qty).toFixed(2)
       return <tr>
         <td className='control'>
-          <img src='/assets/delete-item.png' className='delete-item' onClick={this.removeItem(item)}/>
+          <img
+            src='/assets/delete-item.png'
+            className='delete-item'
+            onClick={this.removeItem(item)}/>
         </td>
         <td className='thumbnail'>
           <img className='checkout-thumbnail' src={item.thumbnailUrl}/>
@@ -74,7 +77,10 @@ export default class CartTableWidget extends React.Component {
           <p className='short-description'>{item.shortDescription}</p>
         </td>
         <td className='price'>${price}</td>
-        <td className='quantity'><QuantityWidget quantity={item.quantity} handleQtyIncrease={this.increaseQty(item)} handleQtyDecrease={this.decreaseQty(item)}/></td>
+        <td className='quantity'><QuantityWidget
+          quantity={item.quantity}
+          handleQtyIncrease={this.increaseQty(item)}
+          handleQtyDecrease={this.decreaseQty(item)}/></td>
         <td className='total price'>${total}</td>
       </tr>
     })

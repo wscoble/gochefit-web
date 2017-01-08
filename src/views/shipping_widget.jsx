@@ -8,6 +8,11 @@ export default class ShippingWidget extends React.Component {
         resolve(lambda)
       })
     })
+    this.shippingDatasetPromise = new Promise((resolve, reject) => {
+      props.events.shippingDatasetOpened.add((dataset) => {
+        resolve(dataset)
+      })
+    })
     this.state = {
       city: '',
       finalCity: '',
@@ -17,7 +22,8 @@ export default class ShippingWidget extends React.Component {
       total: 0.00,
       shippingCost: 0.00,
       shippingMessage: '-',
-      freeShipping: true
+      freeShipping: true,
+      errors: []
     }
   }
 
@@ -29,62 +35,20 @@ export default class ShippingWidget extends React.Component {
     }).then((subtotal) => {
       this.setState({subtotal: subtotal})
     })
-  }
 
-  updateTaxes(lambda) {
-    return new Promise((resolve, reject) => {
-      if (this.state.taxes === 0 && this.state.total === 0 && this.state.subtotal !== 0) {
-        let params = {
-          FunctionName: 'TaxCalculator',
-          InvocationType: 'RequestResponse',
-          Payload: JSON.stringify({subtotal: this.state.subtotal})
-        }
-
-        lambda.invoke(params, (err, data) => {
-          if (err) {
-            this.props.events.errored.dispatch(err)
-          } else {
-            let result = JSON.parse(data.Payload)
-            this.setState({taxes: result.taxes, total: result.total})
-          }
-        })
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
-  }
-
-  updateShipping(prevState) {
-    return (lambda) => {
-      return new Promise((resolve, reject) => {
-        if (this.state.finalCity !== prevState.finalCity) {
-          let params = {
-            FunctionName: 'ShippingCalculator',
-            InvocationType: 'RequestResponse',
-            Payload: JSON.stringify({city: this.state.finalCity})
-          }
-
-          lambda.invoke(params, (err, data) => {
-            if (err) {
-              this.props.events.errored.dispatch(err)
-            } else {
-              let result = JSON.parse(data.Payload)
-              let cost = result.shippingCost
-              this.setState({
-                shippingCost: cost,
-                shippingMessage: result.freeShipping
-                  ? 'Free!'
-                  : '$' + cost
-              })
-            }
-          })
-          resolve(true)
+    this.shippingDatasetPromise.then(dataset => {
+      dataset.get('shipping-info', (err, dataStr) => {
+        if (err) {
+          this.props.events.errored.dispatch(err)
         } else {
-          resolve(false)
+          if (dataStr) {
+            let data = JSON.parse(dataStr)
+            data['finalCity'] = data['city']
+            this.setState(data)
+          }
         }
       })
-    }
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -102,7 +66,6 @@ export default class ShippingWidget extends React.Component {
             if (err) {
               this.props.events.errored.dispatch(err)
             } else {
-              console.log('updating shipping')
               let result = JSON.parse(data.Payload)
               update['shippingCost'] = result.shippingCost
               update['shippingMessage'] = result.freeShipping
@@ -117,7 +80,8 @@ export default class ShippingWidget extends React.Component {
         }
       }).then((update) => {
         return new Promise((resolve, reject) => {
-          if ((this.state.finalCity !== prevState.finalCity) || (this.state.taxes === 0 && this.state.total === 0 && this.state.subtotal !== 0)) {
+          // if we have an updated shipping cost or if we haven't calculated taxes yet
+          if ((update.hasOwnProperty('shippingCost')) || (this.state.taxes === 0 && this.state.total === 0 && this.state.subtotal !== 0)) {
             let params = {
               FunctionName: 'TaxCalculator',
               InvocationType: 'RequestResponse',
@@ -128,7 +92,6 @@ export default class ShippingWidget extends React.Component {
               if (err) {
                 this.props.events.errored.dispatch(err)
               } else {
-                console.log('updating taxes')
                 let result = JSON.parse(data.Payload)
                 update['taxes'] = result.taxes
                 update['total'] = result.total
@@ -143,10 +106,39 @@ export default class ShippingWidget extends React.Component {
           }
         })
       }).then((update) => {
-        console.log('update for shipping + taxes', JSON.stringify(update))
         if (Object.keys(update).length > 0) {
-          console.log('applying update')
           this.setState(update)
+        }
+      })
+    })
+    this.shippingDatasetPromise.then(dataset => {
+      const shippingValues = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        phone: this.state.phone,
+        address1: this.state.address1,
+        address2: this.state.address2,
+        city: this.state.city,
+        state: this.state.state,
+        zip: this.state.zip
+      }
+      dataset.put('shipping-info', JSON.stringify(shippingValues), (err, newRecords) => {
+        if (err) {
+          this.props.events.errored.dispatch(err)
+        } else {
+          dataset.synchronize({
+            onFailure: (err) => {
+              this.props.events.errored.dispatch(err)
+            },
+            onConflict: (dataset, conflicts, callback) => {
+              let resolved = []
+              for (let i = 0; i < conflicts.length; i++) {
+                resolved.push(conflicts[i].resolveWithLocalRecord())
+              }
+              dataset.resolve(resolved, () => callback(true))
+            }
+          })
         }
       })
     })
@@ -196,15 +188,60 @@ export default class ShippingWidget extends React.Component {
     }
     return <div className='container'>
       <div className='address-form'>
-        <input type='text' className={`first-name ${this.hasError('firstName')} ${this.hasSuccess('firstName')}`} value={this.state.firstName} placeholder='First Name' onChange={(e) => this.handleAddressChange('firstName')(e)}/>
-        <input type='text' className={`last-name ${this.hasError('lastName')} ${this.hasSuccess('lastName')}`} value={this.state.lastName} placeholder='Last Name' onChange={(e) => this.handleAddressChange('lastName')(e)}/>
-        <input type='email' className={`email ${this.hasError('email')} ${this.hasSuccess('email')}`} value={this.state.email} placeholder='Email' onChange={(e) => this.handleAddressChange('email')(e)}/>
-        <input type='phone' className={`phone ${this.hasError('phone')} ${this.hasSuccess('phone')}`} value={this.state.phone} placeholder='Phone' onChange={(e) => this.handleAddressChange('phone')(e)}/>
-        <input type='text' className={`address ${this.hasError('address1')} ${this.hasSuccess('address1')}`} value={this.state.address1} placeholder='Address 1' onChange={(e) => this.handleAddressChange('address1')(e)}/>
-        <input type='text' className='address' value={this.state.address2} placeholder='Address 2' onChange={(e) => this.handleAddressChange('address2')(e)}/>
-        <input type='text' className={`city ${this.hasError('city')} ${this.hasSuccess('city')}`} value={this.state.city} placeholder='City' onBlur={(e) => this.handleCityBlur(e)} onChange={(e) => this.handleAddressChange('city')(e)}/>
-        <input type='text' className='state' value={this.state.state} placeholder='State'/>
-        <input type='text' className={`zip ${this.hasError('zip')} ${this.hasSuccess('zip')}`} value={this.state.zip} placeholder='Zip Code' onChange={(e) => this.handleAddressChange('zip')(e)}/>
+        <input
+          type='text'
+          className={`first-name ${this.hasError('firstName')} ${this.hasSuccess('firstName')}`}
+          value={this.state.firstName}
+          placeholder='First Name'
+          onChange={(e) => this.handleAddressChange('firstName')(e)}/>
+        <input
+          type='text'
+          className={`last-name ${this.hasError('lastName')} ${this.hasSuccess('lastName')}`}
+          value={this.state.lastName}
+          placeholder='Last Name'
+          onChange={(e) => this.handleAddressChange('lastName')(e)}/>
+        <input
+          type='email'
+          className={`email ${this.hasError('email')} ${this.hasSuccess('email')}`}
+          value={this.state.email}
+          placeholder='Email'
+          onChange={(e) => this.handleAddressChange('email')(e)}/>
+        <input
+          type='phone'
+          className={`phone ${this.hasError('phone')} ${this.hasSuccess('phone')}`}
+          value={this.state.phone}
+          placeholder='Phone'
+          onChange={(e) => this.handleAddressChange('phone')(e)}/>
+        <input
+          type='text'
+          className={`address ${this.hasError('address1')} ${this.hasSuccess('address1')}`}
+          value={this.state.address1}
+          placeholder='Address 1'
+          onChange={(e) => this.handleAddressChange('address1')(e)}/>
+        <input
+          type='text'
+          className='address'
+          value={this.state.address2}
+          placeholder='Address 2'
+          onChange={(e) => this.handleAddressChange('address2')(e)}/>
+        <input
+          type='text'
+          className={`city ${this.hasError('city')} ${this.hasSuccess('city')}`}
+          value={this.state.city}
+          placeholder='City'
+          onBlur={(e) => this.handleCityBlur(e)}
+          onChange={(e) => this.handleAddressChange('city')(e)}/>
+        <input
+          type='text'
+          className='state'
+          value={this.state.state}
+          placeholder='State'/>
+        <input
+          type='text'
+          className={`zip ${this.hasError('zip')} ${this.hasSuccess('zip')}`}
+          value={this.state.zip}
+          placeholder='Zip Code'
+          onChange={(e) => this.handleAddressChange('zip')(e)}/>
       </div>
       <div className='subtotal'>
         <span className='title'>Subtotal</span>

@@ -7,9 +7,13 @@ module.exports = {
   datasetOpened: new Signal(), // gets the Cognito dataset
   lambdaAvailable: new Signal(),
   cartDatasetOpened: new Signal(), // gets the Cognito cart dataset
+  shippingDatasetOpened: new Signal(),
+  paymentDatasetOpened: new Signal(),
   messageSendRequested: new Signal(), // gets name, email, message
   messageSent: new Signal(), // gets a success message
   messageSendFailed: new Signal(), // gets an error message
+  paymentInfoSaved: new Signal(), // gets the Acceptjs Nonce information
+  requestAuthorizePayment: new Signal(), // gets the payment information
   // Tracking events
   track: new Signal(), // gets (data-title, event-name)
   debug: new Signal(), // for debugging

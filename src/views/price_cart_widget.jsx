@@ -124,7 +124,12 @@ export default class PriceCartWidget extends React.Component {
 
           return <span className="option-value">
             <label htmlFor={id}>{optionValue}</label>
-            <input id={id} type="radio" name="item-options" checked={this.state.selectedOptions[optionName] === optionValue} onClick={(e) => this.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])(e)}/>
+            <input
+              id={id}
+              type="radio"
+              name="item-options"
+              checked={this.state.selectedOptions[optionName] === optionValue}
+              onClick={(e) => this.handleOptionSelect(optionName, optionValue, options[optionName][optionValue])(e)}/>
           </span>
         })
         return <span className="option-wrapper">
@@ -141,7 +146,10 @@ export default class PriceCartWidget extends React.Component {
     // render the final widget
     return <div className="price-cart-widget">
       <div className="price">${price}</div>
-      <QuantityWidget quantity={this.state.quantity} handleQtyIncrease={() => this.handleQtyIncrease()} handleQtyDecrease={() => this.handleQtyDecrease()}/>
+      <QuantityWidget
+        quantity={this.state.quantity}
+        handleQtyIncrease={() => this.handleQtyIncrease()}
+        handleQtyDecrease={() => this.handleQtyDecrease()}/>
       <div className="get-started">
         <span className="wrapper">
           <a onClick={(e) => this.handleAddToCart(e)}>{this.state.addMessage}</a>

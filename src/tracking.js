@@ -1,6 +1,5 @@
 /* global $ */
 module.exports = (events) => {
-  events.authenticated.add((credentials) => {})
   $('[data-title]').on('mouseenter', (e) => {
     let self = $(this)
     let sectionTitle = self.attr('data-title')
