@@ -79,9 +79,8 @@ export default class PriceCartWidget extends React.Component {
   }
 
   render() {
-    console.log(this.props)
-    let macrosBlock,
-      optionsBlock
+    let macrosBlock
+    let optionsBlock
     let adjustments = this.state.adjustments
     let macros = this.props.macros
     let options = this.props.options

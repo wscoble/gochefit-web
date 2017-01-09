@@ -24,13 +24,13 @@ module.exports = (events) => {
     }
     let putDataset = (name, data) => {
       return new Promise((resolve, reject) => {
-        dataset.put(name, JSON.stringify(data), promisifyCallback(resolve, reject))
+        dataset.put(name, JSON.stringify(data), promisifyCallback(
+          resolve, reject))
       })
     }
     let dispatchDebug = (name) => {
       return (value) => {
         return new Promise((resolve, reject) => {
-          console.log('calling debug.dispatch with', name, 'and', value)
           events.debug.dispatch(name, value)
           resolve(value)
         })
@@ -47,7 +47,8 @@ module.exports = (events) => {
       return cart
     }
     // get existing cart items and dispatch the updated event
-    getDataset('items').then(dispatchCartUpdated).then(dispatchDebug('initial cart updated')).catch(dispatchError)
+    getDataset('items').then(dispatchCartUpdated).then(dispatchDebug(
+      'initial cart updated')).catch(dispatchError)
     // wire up cart events
     events.cartItemAdded.add((item) => {
       getDataset('items').then((cart) => {
@@ -69,7 +70,8 @@ module.exports = (events) => {
           dataset.synchronize()
           return cart
         })
-      }).then(dispatchDebug('cart updated')).then(dispatchCartUpdated).catch(dispatchError)
+      }).then(dispatchDebug('cart updated')).then(
+        dispatchCartUpdated).catch(dispatchError)
     })
     events.cartItemDeleted.add((itemHash) => {
       getDataset('items').then((cart) => {

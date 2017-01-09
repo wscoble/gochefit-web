@@ -4,7 +4,6 @@ import QuantityWidget from './quantity_widget.jsx' // eslint-disable-line
 
 class SelectedOptionsWidget extends React.Component { // eslint-disable-line
   render() {
-    console.log('selected options widget:', this.props)
     let options = Object.keys(this.props.selectedOptions).map((key) => {
       return <p>{key}: {this.props.selectedOptions[key]}</p>
     })

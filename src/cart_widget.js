@@ -2,6 +2,7 @@ import CartWidget from './views/cart_widget.jsx'
 import PriceCartWidget from './views/price_cart_widget.jsx'
 import CheckoutItemsWidget from './views/checkout_items_widget.jsx'
 import ShippingWidget from './views/shipping_widget.jsx'
+import PaymentWidget from './views/payment_widget.jsx'
 let ReactDOM = require('react-dom')
 let React = require('react')
 module.exports = (events) => {
@@ -15,8 +16,10 @@ module.exports = (events) => {
   if (priceCartWidgetElement) {
     let basePrice = priceCartWidgetElement.getAttribute('data-base-price')
     let name = priceCartWidgetElement.getAttribute('data-name')
-    let thumbnailUrl = priceCartWidgetElement.getAttribute('data-thumbnail-url')
-    let shortDescription = priceCartWidgetElement.getAttribute('data-short-description')
+    let thumbnailUrl = priceCartWidgetElement.getAttribute(
+      'data-thumbnail-url')
+    let shortDescription = priceCartWidgetElement.getAttribute(
+      'data-short-description')
     let options = {}
     let macros = {}
     if (priceCartWidgetElement.getAttribute('data-options') !== '') {
@@ -34,7 +37,8 @@ module.exports = (events) => {
       name: name,
       shortDescription: shortDescription
     }
-    ReactDOM.render(React.createElement(PriceCartWidget, props), priceCartWidgetElement)
+    ReactDOM.render(React.createElement(PriceCartWidget, props),
+      priceCartWidgetElement)
   }
   let checkoutTableWidgetElement = document.getElementById('checkout-items')
   if (checkoutTableWidgetElement) {
@@ -47,5 +51,11 @@ module.exports = (events) => {
     ReactDOM.render(React.createElement(ShippingWidget, {
       events: events
     }), shippingWidgetElement)
+  }
+  let paymentWidgetElement = document.getElementById('payment-widget')
+  if (paymentWidgetElement) {
+    ReactDOM.render(React.createElement(PaymentWidget, {
+      events: events
+    }), paymentWidgetElement)
   }
 }

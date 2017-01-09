@@ -26,6 +26,7 @@ export default class ShippingWidget extends React.Component {
       finalCity: '',
       state: 'NV',
       zip: '',
+      specialInstructions: '',
       subtotal: 0.00,
       taxes: 0.00,
       total: 0.00,
@@ -163,7 +164,9 @@ export default class ShippingWidget extends React.Component {
                 this.props.events.errored.dispatch(err)
               } else {
                 const data = JSON.parse(result.Payload)
+                // if the returned errors are not the same as the current errors
                 if (!data.errors.map(error => this.state.errors.indexOf(error) > -1).reduce((a, b) => a || b, false)) {
+                  // if there are no errors in state or in returned errors
                   if (data.errors.length === 0 && this.state.errors.length === 0) {
                     // do not update
                   } else {
@@ -176,7 +179,6 @@ export default class ShippingWidget extends React.Component {
           })
         }).then((update) => {
           if (Object.keys(update).length > 0) {
-            console.log('update is', update)
             this.setState(update)
           }
         })
@@ -191,7 +193,13 @@ export default class ShippingWidget extends React.Component {
           address2: this.state.address2,
           city: this.state.city,
           state: this.state.state,
-          zip: this.state.zip
+          zip: this.state.zip,
+          specialInstructions: this.state.specialInstructions,
+          taxes: this.state.taxes,
+          subtotal: this.state.subtotal,
+          shippingCost: this.state.shippingCost,
+          shippingMessage: this.state.shippingMessage,
+          total: this.state.total
         }
         dataset.put('shipping-info', JSON.stringify(shippingValues), (err, newRecords) => {
           if (err) {
@@ -242,7 +250,6 @@ export default class ShippingWidget extends React.Component {
   }
 
   render() {
-    console.log('shipping widget state', this.state)
     let subtotal = this.state.subtotal.toFixed(2)
     let total = this.state.total.toFixed(2)
     let taxes = this.state.taxes.toFixed(2)
@@ -251,12 +258,14 @@ export default class ShippingWidget extends React.Component {
       shipping = <span className='value'>{this.state.shippingMessage}</span>
     }
 
-    let next = ''
+    let next = <div className='next'>
+      Please fill out the form to continue
+    </div>
     if (this.state.errors.length === 0) {
       next = <div className='next'>
         <div className='get-started'>
           <span className='wrapper'>
-            <a onClick={(e) => this.handleConfirmation(e)}>3. CONFIRMATION
+            <a href='/checkout-3.html'>3. CONFIRMATION
               <img src='/assets/cart-next.png'/></a>
           </span>
         </div>
@@ -340,6 +349,11 @@ export default class ShippingWidget extends React.Component {
           placeholder='Zip Code'
           onBlur={(e) => this.handleAddressChange('zip')(e)}
           onChange={(e) => this.handleAddressChange('zip')(e)}/>
+        <textarea
+          className='special-instructions'
+          value={this.state.specialInstructions}
+          placeholder='Special Instructions'
+          onChange={(e) => this.handleAddressChange('specialInstructions')(e)}/>
       </div>
       <div className='subtotal'>
         <span className='title'>Subtotal</span>
