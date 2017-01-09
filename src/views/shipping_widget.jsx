@@ -33,7 +33,9 @@ export default class ShippingWidget extends React.Component {
       shippingCost: 0.00,
       shippingMessage: '-',
       freeShipping: true,
-      errors: ['initial']
+      errors: ['initial'],
+      deliveryDays: [],
+      activeDeliveryDay: ''
     }
   }
 
@@ -82,6 +84,23 @@ export default class ShippingWidget extends React.Component {
         } else {
           const data = JSON.parse(result.Payload)
           this.setState({errors: data.errors})
+        }
+      })
+    })
+
+    this.lambdaPromise.then(lambda => {
+      let params = {
+        FunctionName: 'AvailableDeliveryDays',
+        InvocationType: 'RequestResponse',
+        Payload: ''
+      }
+
+      lambda.invoke(params, (err, result) => {
+        if (err) {
+          this.props.events.errored.dispatch(err)
+        } else {
+          const data = JSON.parse(result.Payload)
+          this.setState({deliveryDays: data, activeDeliveryDay: data[0]})
         }
       })
     })
@@ -199,7 +218,8 @@ export default class ShippingWidget extends React.Component {
           subtotal: this.state.subtotal,
           shippingCost: this.state.shippingCost,
           shippingMessage: this.state.shippingMessage,
-          total: this.state.total
+          total: this.state.total,
+          deliveryDay: this.state.activeDeliveryDay
         }
         dataset.put('shipping-info', JSON.stringify(shippingValues), (err, newRecords) => {
           if (err) {
@@ -249,6 +269,10 @@ export default class ShippingWidget extends React.Component {
     }
   }
 
+  changeDeliveryDay(day) {
+    this.setState({activeDeliveryDay: day})
+  }
+
   render() {
     let subtotal = this.state.subtotal.toFixed(2)
     let total = this.state.total.toFixed(2)
@@ -287,6 +311,15 @@ export default class ShippingWidget extends React.Component {
         return ''
       }
     }
+
+    let deliveryDays = this.state.deliveryDays.map((day) => {
+      let className = 'delivery-day'
+      if (this.state.activeDeliveryDay === day) {
+        className += ' active'
+      }
+      return <span className={className} onClick={(e) => this.changeDeliveryDay(day)}>{day}</span>
+    })
+
     return <div className='container'>
       <div className='address-form'>
         <input
@@ -366,6 +399,10 @@ export default class ShippingWidget extends React.Component {
       <div className='shipping-cost'>
         <span className='title'>Shipping</span>
         {shipping}
+      </div>
+      <div className='delivery-days-group'>
+        <span className='title'>Deliver On</span>
+        {deliveryDays}
       </div>
       <div className='total large'>
         <span className='title'>Total</span>

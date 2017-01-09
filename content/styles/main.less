@@ -1202,6 +1202,39 @@ body.checkout {
 
       .shipping-selector {}
 
+      .delivery-days-group {
+        position: absolute;
+        right: 27%;
+        top: 160px;
+        width: 15%;
+
+        .title {
+          width: 100%;
+          text-align: center;
+          left: 0;
+          color: #a19a8f;
+          font-size: 22px;
+          display: block;
+          margin-bottom: 6px;
+        }
+
+        .delivery-day {
+          display: block;
+          padding: 10px;
+          width: 100%;
+          text-align: center;
+          font-size: 22px;
+          white-space: nowrap;
+          cursor: pointer;
+          margin-bottom: 8px;
+
+          &.active {
+            background-color: #6f9f27;
+            color: white;
+          }
+        }
+      }
+
       .subtotal {
         position: absolute;
         right: 28%;
@@ -1266,7 +1299,7 @@ body.checkout {
 
       .shipping-cost {
         position: absolute;
-        top: 200px;
+        top: 160px;
         right: 9%;
         width: 13%;
 
