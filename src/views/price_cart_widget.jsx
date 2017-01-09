@@ -10,7 +10,8 @@ export default class PriceCartWidget extends React.Component {
       quantity: 1,
       selectedOptions: {},
       addMessage: 'ADD TO CART',
-      adjustments: {}
+      adjustments: {},
+      doShowContinueShopping: false
     }
   }
 
@@ -62,7 +63,7 @@ export default class PriceCartWidget extends React.Component {
     item.hash = md5(JSON.stringify(item))
     item.quantity = this.state.quantity
     this.props.events.cartItemAdded.dispatch(item)
-    this.setState({addMessage: 'ADDED'})
+    this.setState({addMessage: 'ADDED', doShowContinueShopping: true})
 
     setTimeout(() => {
       this.setState({addMessage: 'ADD TO CART'})
@@ -142,6 +143,16 @@ export default class PriceCartWidget extends React.Component {
       </div>
     }
 
+    let continueShoppingButton = this.state.doShowContinueShopping
+      ? <div className='continue-shopping'>
+          <div className="get-started">
+            <span className="wrapper">
+              <a href='/menu.html'>CONTINUE SHOPPING</a>
+            </span>
+          </div>
+        </div>
+      : ''
+
     // render the final widget
     return <div className="price-cart-widget">
       <div className="price">${price}</div>
@@ -149,11 +160,14 @@ export default class PriceCartWidget extends React.Component {
         quantity={this.state.quantity}
         handleQtyIncrease={() => this.handleQtyIncrease()}
         handleQtyDecrease={() => this.handleQtyDecrease()}/>
-      <div className="get-started">
-        <span className="wrapper">
-          <a onClick={(e) => this.handleAddToCart(e)}>{this.state.addMessage}</a>
-        </span>
+      <div className='add-button'>
+        <div className="get-started">
+          <span className="wrapper">
+            <a onClick={(e) => this.handleAddToCart(e)}>{this.state.addMessage}</a>
+          </span>
+        </div>
       </div>
+      {continueShoppingButton}
       {macrosBlock}
       {optionsBlock}
     </div>
