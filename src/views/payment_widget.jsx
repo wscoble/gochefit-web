@@ -98,6 +98,30 @@ export default class PaymentWidget extends React.Component {
         }
       })
     })
+
+    this.props.events.paymentInfoReceived.add(data => {
+      if (data) {
+        this.lambdaPromise.then(lambda => {
+          console.log('payment info', data)
+          data['amount'] = this.state.total.toFixed(2)
+
+          let params = {
+            FunctionName: 'PaymentProcessor',
+            InvocationType: 'RequestResponse',
+            Payload: JSON.stringify(data)
+          }
+
+          lambda.invoke(params, (err, result) => {
+            if (err) {
+              this.props.events.errored.dispatch(err)
+            } else {
+              console.log(result)
+              console.log(JSON.parse(result.Payload))
+            }
+          })
+        })
+      }
+    })
   }
 
   handleAddressChange(field) {
@@ -157,6 +181,16 @@ export default class PaymentWidget extends React.Component {
 
   handlePay(event) {
     console.log('Pay triggered!')
+    let data = {
+      cardNumber: this.state.cardNumber,
+      month: this.state.month,
+      year: this.state.year,
+      cvc: this.state.cvc,
+      zip: this.state.zip,
+      fullName: this.state.fullName
+    }
+    console.log('sending this to acceptjs', data)
+    this.props.events.requestAuthorizePayment.dispatch(data)
   }
 
   render() {
