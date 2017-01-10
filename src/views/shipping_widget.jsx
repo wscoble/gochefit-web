@@ -101,6 +101,11 @@ export default class ShippingWidget extends React.Component {
         } else {
           const data = JSON.parse(result.Payload)
           this.setState({deliveryDays: data})
+          setTimeout(() => {
+            if (!this.state.activeDeliveryDay !== '') {
+              this.setState({activeDeliveryDay: data[0]})
+            }
+          }, 300)
         }
       })
     })
@@ -283,9 +288,9 @@ export default class ShippingWidget extends React.Component {
     }
 
     let next = <div className='next'>
-      Please fill out the form to continue
+      Please fill out the form and choose a delivery day to continue
     </div>
-    if (this.state.errors.length === 0) {
+    if (this.state.errors.length === 0 && this.state.activeDeliveryDay !== '') {
       next = <div className='next'>
         <div className='get-started'>
           <span className='wrapper'>

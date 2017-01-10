@@ -1393,7 +1393,6 @@ body.checkout {
 
     .container {
       position: relative;
-      min-height: 80vh;
 
       .shipping-info {
         width: 45%;
@@ -1433,6 +1432,10 @@ body.checkout {
         width: 45%;
         position: absolute;
         right: 0;
+
+        .options-img {
+          margin-bottom: 18px;
+        }
 
         input {
           padding: 8px;
@@ -1513,9 +1516,13 @@ body.checkout {
 
         .paypal-pay {
           position: absolute;
-          right: 120px;
-          bottom: -179px;
+          right: 214px;
+          bottom: -171px;
           cursor: pointer;
+        }
+
+        .back {
+          bottom: -162px;
         }
       }
     }

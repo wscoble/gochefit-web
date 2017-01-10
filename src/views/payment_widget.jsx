@@ -6,12 +6,15 @@ export default class PaymentWidget extends React.Component {
     super(props)
     this.state = {
       fullName: '',
+      shippingZip: '',
       zip: '',
       cardNumber: '',
       month: '',
       year: '',
       cvc: '',
-      errors: ['initial'],
+      errors: [
+        'cardNumber', 'month', 'year', 'cvc'
+      ],
       items: [],
       subtotal: 0,
       total: 0,
@@ -54,6 +57,7 @@ export default class PaymentWidget extends React.Component {
             let data = JSON.parse(dataStr)
             this.setState({
               fullName: data.firstName + ' ' + data.lastName,
+              shippingZip: data.zip,
               zip: data.zip
             })
           }
@@ -91,6 +95,7 @@ export default class PaymentWidget extends React.Component {
               shippingCity: data.city,
               shippingState: data.state,
               shippingZip: data.zip,
+              zip: data.zip,
               shippingPhone: data.phone,
               total: data.total,
               subtotal: data.subtotal,
@@ -366,7 +371,7 @@ export default class PaymentWidget extends React.Component {
         <span className='pay' onClick={(e) => this.handlePay(e)}>
           <div className='get-started'>
             <span className='wrapper'>
-              <a>PAY
+              <a>PAY WITH CARD
                 <img src='/assets/cart-next.png'/></a>
             </span>
           </div>
@@ -375,8 +380,8 @@ export default class PaymentWidget extends React.Component {
       payOptions.push(
         <span className='paypal-pay' onClick={(e) => this.handlePaypalPay(e)}>
           <img
-            src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png"
-            alt="Check out with PayPal"/>
+            src='https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png'
+            alt='Check out with PayPal'/>
         </span>
       )
     }
@@ -384,6 +389,7 @@ export default class PaymentWidget extends React.Component {
     return <div className='container'>
       <div className='billing-form'>
         <img
+          className='options-img'
           src='https://www.paypalobjects.com/webstatic/en_US/i/buttons/cc-badges-ppmcvdam.png'
           alt='Buy now with PayPal'/>
         <input
@@ -433,6 +439,12 @@ export default class PaymentWidget extends React.Component {
             ${this.state.total.toFixed(2)}
           </span>
         </span>
+        <div className='back'>
+          <a href='/checkout-1.html'>
+            <img src='/assets/back-arrow.png'/>
+            2. ORDER INFO
+          </a>
+        </div>
         {payOptions}
       </div>
       <div className='shipping-info'>
@@ -440,8 +452,7 @@ export default class PaymentWidget extends React.Component {
           <h3>SHIP TO</h3>
           <p>{this.state.shippingName}</p>
           {address}
-          <p>{this.state.shippingCity}, {this.state.shippingState}
-            {this.shippingZip}</p>
+          <p>{this.state.shippingCity},&nbsp;{this.state.shippingState}&nbsp;{this.state.shippingZip}</p>
           <p>{this.state.shippingPhone}</p>
           {specialInstructions}
           <p><br/>On {this.state.deliveryDay}</p>
