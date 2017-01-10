@@ -22,16 +22,9 @@
          data-macros="{{toJSON macros}}"
          data-thumbnail-url="{{tileColorBackground.fields.file.url}}"
          data-short-description="{{shortDescription}}"
+         data-ingredients="{{toJSON ingredients}}"
+         data-long-description="{{md longDescription}}"
          data-name="{{name}}">
-    </div>
-    <div class="ingredients">
-      <h2>INGREDIENTS</h2>
-      {{#each ingredients}}
-      <p>{{this}}</p>
-      {{/each}}
-    </div>
-    <div class="description">
-      {{md longDescription}}
     </div>
     {{/with}}
   </div>

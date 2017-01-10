@@ -1,0 +1,11 @@
+{{#each data.entries}}
+<h1>{{fields.title}}</h1>
+{{md fields.contentText}}
+
+<dl>
+{{#each fields.contentItems}}
+  <dd>{{fields.question}}</dd>
+  <dt>{{fields.answer}}</dt>
+{{/each}}
+</dl>
+{{/each}}

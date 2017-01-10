@@ -852,14 +852,6 @@ h2 {
     position: absolute;
   }
 
-  .description {
-    position: absolute;
-    top: 482px;
-    left: 516px;
-    text-align: left;
-    line-height: 140%;
-  }
-
   .quantity {
     position: absolute;
     top: 648px;
@@ -878,45 +870,57 @@ h2 {
     }
   }
 
-  .ingredients {
-    position: absolute;
-    left: 516px;
-    top: 262px;
-    text-align: left;
+  .lists {
+    margin-left: 42%;
+    margin-top: 180px;
+    width: 58%;
+    position: relative;
 
-    h2 {
-      font-size: 24px;
-      color: #444444;
-      padding-bottom: 22px;
+    .ingredients {
+      text-align: left;
+      width: 45%;
+
+      h2 {
+        font-size: 24px;
+        color: #444444;
+        padding-bottom: 22px;
+      }
+
+      p {
+        padding: 4px 0;
+      }
     }
 
-    p {
-      padding: 4px 0;
+    .macros {
+      text-align: left;
+      width: 45%;
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      h2 {
+        font-size: 24px;
+        color: #444444;
+        padding-bottom: 22px;
+      }
+
+      p {
+        padding: 4px 0;
+      }
+
+      .name {}
+
+      .value {
+        float: right;
+        text-align: right;
+      }
     }
-  }
 
-  .macros {
-    position: absolute;
-    left: 816px;
-    top: 262px;
-    text-align: left;
-    width: 260px;
-
-    h2 {
-      font-size: 24px;
-      color: #444444;
-      padding-bottom: 22px;
-    }
-
-    p {
-      padding: 4px 0;
-    }
-
-    .name {}
-
-    .value {
-      float: right;
-      text-align: right;
+    .description {
+      text-align: left;
+      line-height: 140%;
+      margin-top: 32px;
+      width: 100%;
     }
   }
 }

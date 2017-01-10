@@ -148,8 +148,12 @@ export default class PaymentWidget extends React.Component {
               if (data.success) {
                 this.paymentSucceeded()
               } else {
-                this.setState({paymentErrorMessage: data['errors'][0]['errorText']
-                })
+                if (data.hasOwnProperty('errors')) {
+                  this.setState({paymentErrorMessage: data['errors'][0]['errorText']
+                  })
+                } else {
+                  this.setState({paymentErrorMessage: 'Something went wrong, please try again.'})
+                }
               }
             }
           })
@@ -292,7 +296,7 @@ export default class PaymentWidget extends React.Component {
                 return callback(true)
               },
               onDatasetsMerged: (dataset, datasetNames, callback) => {
-                return callback(true)
+                return callback(false)
               }
             })
           }

@@ -1,0 +1,7 @@
+{{#each data.entries}}
+<h1>{{fields.title}}</h1>
+{{md fields.contentText}}
+{{#with fields.contentItems.0.fields}}
+{{> messaging}}
+{{/with}}
+{{/each}}

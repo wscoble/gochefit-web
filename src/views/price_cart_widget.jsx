@@ -3,6 +3,15 @@ let helpers = require('../helpers')
 let React = require('react')
 import QuantityWidget from './quantity_widget.jsx' // eslint-disable-line
 
+let macrosOrder = [
+  'Calories',
+  'Fat',
+  'Saturated Fat',
+  'Carbohydrates',
+  'Sugars',
+  'Protein'
+]
+
 export default class PriceCartWidget extends React.Component {
   constructor(props) {
     super(props)
@@ -10,7 +19,9 @@ export default class PriceCartWidget extends React.Component {
       quantity: 1,
       selectedOptions: {},
       addMessage: 'ADD TO CART',
-      adjustments: {},
+      adjustments: {
+        Price: 0
+      },
       doShowContinueShopping: false
     }
   }
@@ -23,8 +34,7 @@ export default class PriceCartWidget extends React.Component {
         if (options[optionName][option]['Price'] === 0) {
           let optionState = {}
           optionState[optionName] = option
-          this.setState({selectedOptions: optionState})
-          this.setState({adjustments: options[optionName][option]
+          this.setState({selectedOptions: optionState, adjustments: options[optionName][option]
           })
         }
       }
@@ -74,8 +84,7 @@ export default class PriceCartWidget extends React.Component {
     return () => {
       let selectedOptionsChange = {}
       selectedOptionsChange[name] = value
-      this.setState({selectedOptions: selectedOptionsChange})
-      this.setState({adjustments: changes})
+      this.setState({selectedOptions: selectedOptionsChange, adjustments: changes})
     }
   }
 
@@ -93,7 +102,15 @@ export default class PriceCartWidget extends React.Component {
     if (helpers.isEmptyObject(macros)) {
       macrosBlock = ''
     } else {
-      let macrosList = Object.keys(macros).map((macroName) => {
+      let macrosList = Object.keys(macros).sort((a, b) => {
+        let aIdx = macrosOrder.indexOf(a)
+        let bIdx = macrosOrder.indexOf(b)
+        return (aIdx < bIdx)
+          ? -1
+          : (aIdx > bIdx)
+            ? 1
+            : 0
+      }).map((macroName) => {
         // parse '5g' into [_, '5', 'g', _ ...]
         let macroParts = /(\d+)(.*)/g.exec(macros[macroName])
 
@@ -107,10 +124,10 @@ export default class PriceCartWidget extends React.Component {
           <span className="value">{value}{measurement}</span>
         </p>
       })
-      macrosBlock = <div className="macros">
+      macrosBlock = <span className="macros">
         <h2>MACROS</h2>
         {macrosList}
-      </div>
+      </span>
     }
 
     // create options block if we have options data
@@ -121,13 +138,11 @@ export default class PriceCartWidget extends React.Component {
         let optionChanges = Object.keys(options[optionName]).sort((a, b) => {
           let aValue = options[optionName][a]['Price']
           let bValue = options[optionName][b]['Price']
-          if (aValue > bValue) {
-            return 1
-          } else if (aValue < bValue) {
-            return -1
-          } else {
-            return 0
-          }
+          return (aValue < bValue)
+            ? 1
+            : (aValue > bValue)
+              ? -1
+              : 0
         }).map((optionValue) => {
           // label for=? needs an id to link to
           let id = [optionName, optionValue].join('-')
@@ -163,9 +178,24 @@ export default class PriceCartWidget extends React.Component {
         </div>
       : ''
 
+    let ingredientsContent = this.props.ingredients.map((ingredient) => <p>{ingredient}</p>)
+
+    let longDescription = {
+      __html: this.props.longDescription
+    }
+
     // render the final widget
     return <div className="price-cart-widget">
       <div className="price">${price}</div>
+      <div className="lists">
+        <span className="ingredients">
+          <h2>INGREDIENTS</h2>
+          {ingredientsContent}
+        </span>
+        {macrosBlock}
+        <div className="description" dangerouslySetInnerHTML={longDescription}></div>
+      </div>
+
       <QuantityWidget
         quantity={this.state.quantity}
         handleQtyIncrease={() => this.handleQtyIncrease()}
@@ -178,7 +208,6 @@ export default class PriceCartWidget extends React.Component {
         </div>
       </div>
       {continueShoppingButton}
-      {macrosBlock}
       {optionsBlock}
     </div>
   }

@@ -20,6 +20,10 @@ module.exports = (events) => {
       'data-thumbnail-url')
     let shortDescription = priceCartWidgetElement.getAttribute(
       'data-short-description')
+    let longDescription = priceCartWidgetElement.getAttribute(
+      'data-long-description')
+    let ingredients = JSON.parse(priceCartWidgetElement.getAttribute(
+      'data-ingredients'))
     let options = {}
     let macros = {}
     if (priceCartWidgetElement.getAttribute('data-options') !== '') {
@@ -35,7 +39,9 @@ module.exports = (events) => {
       macros: macros,
       thumbnailUrl: thumbnailUrl,
       name: name,
-      shortDescription: shortDescription
+      shortDescription: shortDescription,
+      longDescription: longDescription,
+      ingredients: ingredients
     }
     ReactDOM.render(React.createElement(PriceCartWidget, props),
       priceCartWidgetElement)
