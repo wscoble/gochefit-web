@@ -1,3 +1,4 @@
+{{#each data.entries}}
 <div class="checkout-breadcrumbs">
   <span class="green">1. ORDER ITEMS</span>
   <img src="/assets/highlighted-right-arrow.png" />
@@ -11,10 +12,11 @@
   <div class="delivery-instructions">
     <h2>Delivery Instructions</h2>
     <span class="message">
-      {{md data.fields.contentItems.0.fields.message}}
+      {{md fields.contentItems.0.fields.message}}
     </span>
   </div>
   <hr class="light" />
   <hr class="light bottom" />
   <div id="shipping-widget"></div>
 </div>
+{{/each}}

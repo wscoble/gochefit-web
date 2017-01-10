@@ -35,7 +35,8 @@ export default class ShippingWidget extends React.Component {
       freeShipping: true,
       errors: ['initial'],
       deliveryDays: [],
-      activeDeliveryDay: ''
+      activeDeliveryDay: '',
+      promoCode: ''
     }
   }
 
@@ -408,6 +409,14 @@ export default class ShippingWidget extends React.Component {
       <div className='delivery-days-group'>
         <span className='title'>Deliver On</span>
         {deliveryDays}
+      </div>
+      <div className='promo-code'>
+        <input
+          type='text'
+          placeholder='Promo Code'
+          className={`value ${hasError('promo')} ${hasSuccess('promo')}`}
+          value={this.state.promoCode}
+          onChange={(e) => this.handleAddressChange('promoCode')(e)}/>
       </div>
       <div className='total large'>
         <span className='title'>Total</span>

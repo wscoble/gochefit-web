@@ -1,5 +1,6 @@
+{{#each data.entries}}
 <div class="thank-you section">
-    {{md data.fields.contentText}}
+    {{md fields.contentText}}
 </div>
-
-{{#with data.fields.contentItems.0.fields}} {{> messaging}} {{/with}}
+{{#with fields.contentItems.0.fields}} {{> messaging}} {{/with}}
+{{/each}}

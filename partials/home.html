@@ -1,12 +1,13 @@
+{{#each data.entries}}
 <div class="top-bg"></div>
 <div id="hero" class="section">
-    <h1>{{#each data.fields.tagline}}<p>{{this}}</p>{{/each}}</h1> {{#with data.fields}}{{> get_started}}{{/with}}
+    <h1>{{#each fields.tagline}}<p>{{this}}</p>{{/each}}</h1> {{#with fields}}{{> get_started}}{{/with}}
 </div>
 {{> loading }}
 <div id="values" class="section" data-title="values">
     <h2>OUR VALUES</h2>
     <div class="content">
-        {{#each data.fields.values}}
+        {{#each fields.values}}
         <hr/>
         <div class="value">{{> value }}</div>
         {{/each}}
@@ -16,17 +17,18 @@
 <div id="howitworks" class="section" data-title="how it works">
     <h2>HOW IT WORKS</h2>
     <div class="center">
-        {{#each data.fields.howItWorks}} {{> howitworks }} {{/each}}
+        {{#each fields.howItWorks}} {{> howitworks }} {{/each}}
     </div>
 </div>
 <div id="cta" class="section">
     <div class="center">
-        {{#each data.fields.callToActions}} {{> calltoaction }} {{/each}}
+        {{#each fields.callToActions}} {{> calltoaction }} {{/each}}
     </div>
 </div>
 <div id="aboutchef" class="section" data-title="about the chef">
-    {{#with data.fields.aboutTheChef}} {{> about_chef}} {{/with}}
+    {{#with fields.aboutTheChef}} {{> about_chef}} {{/with}}
 </div>
 <div class="messaging-bg"></div>
-{{#with data.fields.sendMessage.fields}} {{> messaging}} {{/with}}
+{{#with fields.sendMessage.fields}} {{> messaging}} {{/with}}
 <div class="section"></div>
+{{/each}}
