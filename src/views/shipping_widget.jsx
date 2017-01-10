@@ -58,32 +58,32 @@ export default class ShippingWidget extends React.Component {
             data['finalCity'] = data['city']
             this.setState(data)
           }
-        }
-      })
-    })
 
-    this.lambdaPromise.then(lambda => {
-      const shippingValues = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        phone: this.state.phone,
-        address1: this.state.address1,
-        city: this.state.city,
-        state: this.state.state,
-        zip: this.state.zip
-      }
-      let params = {
-        FunctionName: 'ShippingValidator',
-        InvocationType: 'RequestResponse',
-        Payload: JSON.stringify(shippingValues)
-      }
-      lambda.invoke(params, (err, result) => {
-        if (err) {
-          this.props.events.errored.dispatch(err)
-        } else {
-          const data = JSON.parse(result.Payload)
-          this.setState({errors: data.errors})
+          this.lambdaPromise.then(lambda => {
+            const shippingValues = {
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              email: this.state.email,
+              phone: this.state.phone,
+              address1: this.state.address1,
+              city: this.state.city,
+              state: this.state.state,
+              zip: this.state.zip
+            }
+            let params = {
+              FunctionName: 'ShippingValidator',
+              InvocationType: 'RequestResponse',
+              Payload: JSON.stringify(shippingValues)
+            }
+            lambda.invoke(params, (err, result) => {
+              if (err) {
+                this.props.events.errored.dispatch(err)
+              } else {
+                const data = JSON.parse(result.Payload)
+                this.setState({errors: data['errors']})
+              }
+            })
+          })
         }
       })
     })
@@ -100,7 +100,7 @@ export default class ShippingWidget extends React.Component {
           this.props.events.errored.dispatch(err)
         } else {
           const data = JSON.parse(result.Payload)
-          this.setState({deliveryDays: data, activeDeliveryDay: data[0]})
+          this.setState({deliveryDays: data})
         }
       })
     })
@@ -183,9 +183,9 @@ export default class ShippingWidget extends React.Component {
                 this.props.events.errored.dispatch(err)
               } else {
                 const data = JSON.parse(result.Payload)
-                // if the returned errors are not the same as the current errors
-                if (!data.errors.map(error => this.state.errors.indexOf(error) > -1).reduce((a, b) => a || b, false)) {
-                  // if there are no errors in state or in returned errors
+                // if any of the returned errors are not the same as the current errors
+                if (!this.state.errors.map(error => data.errors.indexOf(error) > -1).reduce((a, b) => a || b, false)) {
+                  // if there are no errors in state and in returned errors
                   if (data.errors.length === 0 && this.state.errors.length === 0) {
                     // do not update
                   } else {
@@ -278,7 +278,7 @@ export default class ShippingWidget extends React.Component {
     let total = this.state.total.toFixed(2)
     let taxes = this.state.taxes.toFixed(2)
     let shipping = <span className='value dollar'>{this.state.shippingMessage}</span>
-    if (this.state.freeShipping) {
+    if (this.state.shippingCost === 0) {
       shipping = <span className='value'>{this.state.shippingMessage}</span>
     }
 

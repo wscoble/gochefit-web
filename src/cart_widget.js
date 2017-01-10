@@ -55,7 +55,9 @@ module.exports = (events) => {
   let paymentWidgetElement = document.getElementById('payment-widget')
   if (paymentWidgetElement) {
     ReactDOM.render(React.createElement(PaymentWidget, {
-      events: events
+      events: events,
+      paypal_success_url: process.env.PAYPAL_SUCCESS_URL,
+      paypal_cancel_url: process.env.PAYPAL_CANCEL_URL
     }), paymentWidgetElement)
   }
 }

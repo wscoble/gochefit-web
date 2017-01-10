@@ -118,7 +118,17 @@ export default class PriceCartWidget extends React.Component {
       optionsBlock = ''
     } else {
       let optionsList = Object.keys(options).map((optionName) => {
-        let optionChanges = Object.keys(options[optionName]).map((optionValue) => {
+        let optionChanges = Object.keys(options[optionName]).sort((a, b) => {
+          let aValue = options[optionName][a]['Price']
+          let bValue = options[optionName][b]['Price']
+          if (aValue > bValue) {
+            return 1
+          } else if (aValue < bValue) {
+            return -1
+          } else {
+            return 0
+          }
+        }).map((optionValue) => {
           // label for=? needs an id to link to
           let id = [optionName, optionValue].join('-')
 

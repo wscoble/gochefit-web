@@ -611,6 +611,16 @@ h2 {
     }
   }
 
+  .authorize-container {
+    position: absolute;
+    right: 25%;
+    bottom: 12px;
+
+    a {
+      color: white;
+    }
+  }
+
   .copyright {
     position: absolute;
     right: 120px;
@@ -827,7 +837,7 @@ h2 {
   }
 
   .add-button {
-    top: 0;
+    bottom: 245px;
     left: 904px;
     position: absolute;
 
@@ -837,7 +847,7 @@ h2 {
   }
 
   .continue-shopping {
-    top: 48px;
+    bottom: 188px;
     left: 904px;
     position: absolute;
   }
@@ -1492,6 +1502,20 @@ body.checkout {
           a {
             cursor: pointer;
           }
+
+          .error-message {
+            position: absolute;
+            right: 140px;
+            bottom: 0;
+            white-space: nowrap;
+          }
+        }
+
+        .paypal-pay {
+          position: absolute;
+          right: 120px;
+          bottom: -179px;
+          cursor: pointer;
         }
       }
     }
@@ -1519,5 +1543,25 @@ body.checkout {
         padding-right: 4px;
       }
     }
+  }
+}
+
+.thank-you {
+  margin-top: 48px;
+
+  h2 {
+    font-size: 42px;
+    margin-bottom: 24px;
+  }
+
+  p {
+    max-width: 540px;
+    padding-bottom: 25px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  &+#sendmessage {
+    margin-top: 40px;
   }
 }

@@ -1,8 +1,12 @@
 module.exports = {
   getItemCountFromCart: (cart) => {
-    return cart.map((item) => item.quantity).reduce((a, b) => {
-      return a + b
-    }, 0)
+    if (cart.length === 0) {
+      return 0
+    } else {
+      return cart.map((item) => item.quantity).reduce((a, b) => {
+        return a + b
+      }, 0)
+    }
   },
   isEmptyObject: (obj) => {
     // null and undefined are "empty"

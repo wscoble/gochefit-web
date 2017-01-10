@@ -11,13 +11,16 @@ export default class PaymentWidget extends React.Component {
       month: '',
       year: '',
       cvc: '',
-      errors: [],
+      errors: ['initial'],
       items: [],
       subtotal: 0,
       total: 0,
       taxes: 0,
       shippingMessage: '',
-      specialInstructions: ''
+      specialInstructions: '',
+      paymentAttempted: false,
+      paymentErrorMessage: '',
+      paymentSuccessMessage: ''
     }
     this.lambdaPromise = new Promise((resolve, reject) => {
       props.events.lambdaAvailable.add((lambda) => {
@@ -79,6 +82,9 @@ export default class PaymentWidget extends React.Component {
           if (dataStr) {
             let data = JSON.parse(dataStr)
             this.setState({
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
               shippingName: data.firstName + ' ' + data.lastName,
               shippingAddress1: data.address1,
               shippingAddress2: data.address2,
@@ -92,7 +98,8 @@ export default class PaymentWidget extends React.Component {
               freeShipping: data.freeShipping,
               shippingCost: data.shippingCost,
               shippingMessage: data.shippingMessage,
-              specialInstructions: data.specialInstructions
+              specialInstructions: data.specialInstructions,
+              deliveryDay: data.deliveryDay
             })
           }
         }
@@ -102,8 +109,25 @@ export default class PaymentWidget extends React.Component {
     this.props.events.paymentInfoReceived.add(data => {
       if (data) {
         this.lambdaPromise.then(lambda => {
-          console.log('payment info', data)
+          let address = this.state.shippingAddress1
+          if (this.state.shippingAddress2) {
+            address += '\n' + this.state.shippingAddress2
+          }
+
+          data['items'] = this.state.items
+          data['tax'] = this.state.taxes
+          data['shippingCost'] = this.state.shippingCost
+          data['customerInfo'] = {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            address: address,
+            city: this.state.shippingCity,
+            state: this.state.shippingState,
+            zip: this.state.shippingZip
+          }
           data['amount'] = this.state.total.toFixed(2)
+          data['command'] = 'payWithCard'
 
           let params = {
             FunctionName: 'PaymentProcessor',
@@ -115,8 +139,13 @@ export default class PaymentWidget extends React.Component {
             if (err) {
               this.props.events.errored.dispatch(err)
             } else {
-              console.log(result)
-              console.log(JSON.parse(result.Payload))
+              let data = JSON.parse(result.Payload)
+              if (data.success) {
+                this.paymentSucceeded()
+              } else {
+                this.setState({paymentErrorMessage: data['errors'][0]['errorText']
+                })
+              }
             }
           })
         })
@@ -138,7 +167,7 @@ export default class PaymentWidget extends React.Component {
       let value = event.target.value
 
       update[field] = value
-      update['errors'] = this.state.errors.slice().filter((e) => e !== field)
+      update['errors'] = this.state.errors.slice().filter((e) => e !== field && e !== 'initial')
 
       let addError = (field) => {
         update['errors'] = update['errors'].concat([field])
@@ -180,21 +209,98 @@ export default class PaymentWidget extends React.Component {
   }
 
   handlePay(event) {
-    console.log('Pay triggered!')
-    let data = {
-      cardNumber: this.state.cardNumber,
-      month: this.state.month,
-      year: this.state.year,
-      cvc: this.state.cvc,
-      zip: this.state.zip,
-      fullName: this.state.fullName
+    if (!this.state.paymentAttempted && this.state.errors.length === 0) {
+      this.setState({paymentAttempted: true})
+      let data = {
+        cardNumber: this.state.cardNumber,
+        month: this.state.month,
+        year: this.state.year,
+        cvc: this.state.cvc,
+        zip: this.state.zip,
+        fullName: this.state.fullName
+      }
+      this.props.events.requestAuthorizePayment.dispatch(data)
     }
-    console.log('sending this to acceptjs', data)
-    this.props.events.requestAuthorizePayment.dispatch(data)
+  }
+
+  handlePaypalPay(event) {
+    if (!this.state.paymentAttempted) {
+      this.setState({paymentAttempted: true})
+      this.lambdaPromise.then(lambda => {
+        let data = {
+          command: 'paypal',
+          successUrl: this.props.paypal_success_url,
+          cancelUrl: this.props.paypal_cancel_url,
+          amount: parseFloat(this.state.total.toFixed(2)),
+          items: this.state.items
+        }
+
+        let params = {
+          FunctionName: 'PaymentProcessor',
+          InvocationType: 'RequestResponse',
+          Payload: JSON.stringify(data)
+        }
+
+        lambda.invoke(params, (err, result) => {
+          if (err) {
+            this.props.events.errored.dispatch(err)
+          } else {
+            let data = JSON.parse(result.Payload)
+            if (data.hasOwnProperty('errors')) {
+              this.setState({paymentErrorMessage: data['errors'][0]['errorText']
+              })
+            } else {
+              this.paymentSucceeded()
+            }
+          }
+        })
+      })
+    }
+  }
+
+  paymentSucceeded() {
+    this.setState({paymentSuccessMessage: 'Thank you for your payment!'})
+    this.cartDatasetPromise.then((dataset) => {
+      return new Promise((resolve, reject) => {
+        dataset.remove('items', (err, record) => {
+          if (err) {
+            this.props.events.errored.dispatch(err)
+          } else {
+            dataset.synchronize({
+              onSuccess: (dataset, newRecords) => {
+                window.location.pathname = '/thank-you.html'
+              },
+              onFailure: (err) => {
+                this.props.events.errored.dispatch(err)
+              },
+              onConflict: (dataset, conflicts, callback) => {
+                var resolved = []
+                for (var i = 0; i < conflicts.length; i++) {
+                  resolved.push(conflicts[i].resolveWithRemoteRecord())
+                }
+
+                dataset.resolve(resolved, () => {
+                  return callback(true)
+                })
+              },
+              onDatasetDeleted: (dataset, datasetName, callback) => {
+                return callback(true)
+              },
+              onDatasetsMerged: (dataset, datasetNames, callback) => {
+                return callback(true)
+              }
+            })
+          }
+        })
+      })
+    })
+  }
+
+  tryPayingAgain(event) {
+    this.setState({paymentErrorMessage: '', paymentAttempted: false, paymentSuccessMessage: ''})
   }
 
   render() {
-    console.log('state', this.state)
     let hasError = (field) => {
       if (this.state.errors.indexOf(field) > -1) {
         return 'error'
@@ -234,8 +340,52 @@ export default class PaymentWidget extends React.Component {
       specialInstructions = <p><br/>{this.state.specialInstructions}</p>
     }
 
+    let paymentMessage = 'Payment is processing ... One moment please'
+
+    if (this.state.paymentSuccessMessage !== '') {
+      paymentMessage = this.state.paymentSuccessMessage
+    }
+
+    if (this.state.paymentErrorMessage !== '') {
+      paymentMessage = <span>
+        <p className='error-message'>{this.state.paymentErrorMessage}</p>
+        <div className='get-started' onClick={(e) => this.tryPayingAgain(e)}>
+          <span className='wrapper'>
+            <a>Try Again</a>
+          </span>
+        </div>
+      </span>
+    }
+
+    let payOptions = <span className='pay'>
+      {paymentMessage}
+    </span>
+    if (!this.state.paymentAttempted) {
+      payOptions = []
+      payOptions.push(
+        <span className='pay' onClick={(e) => this.handlePay(e)}>
+          <div className='get-started'>
+            <span className='wrapper'>
+              <a>PAY
+                <img src='/assets/cart-next.png'/></a>
+            </span>
+          </div>
+        </span>
+      )
+      payOptions.push(
+        <span className='paypal-pay' onClick={(e) => this.handlePaypalPay(e)}>
+          <img
+            src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png"
+            alt="Check out with PayPal"/>
+        </span>
+      )
+    }
+
     return <div className='container'>
       <div className='billing-form'>
+        <img
+          src='https://www.paypalobjects.com/webstatic/en_US/i/buttons/cc-badges-ppmcvdam.png'
+          alt='Buy now with PayPal'/>
         <input
           type='text'
           className={`full-name ${hasError('full-name')} ${hasSuccess('full-name')}`}
@@ -283,14 +433,7 @@ export default class PaymentWidget extends React.Component {
             ${this.state.total.toFixed(2)}
           </span>
         </span>
-        <span className='pay' onClick={(e) => this.handlePay(e)}>
-          <div className='get-started'>
-            <span className='wrapper'>
-              <a>PAY
-                <img src='/assets/cart-next.png'/></a>
-            </span>
-          </div>
-        </span>
+        {payOptions}
       </div>
       <div className='shipping-info'>
         <div className='ship-to'>
@@ -301,6 +444,7 @@ export default class PaymentWidget extends React.Component {
             {this.shippingZip}</p>
           <p>{this.state.shippingPhone}</p>
           {specialInstructions}
+          <p><br/>On {this.state.deliveryDay}</p>
         </div>
         <div className='cart-info'>
           <h3>ITEMS</h3>

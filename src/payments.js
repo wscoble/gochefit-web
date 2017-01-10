@@ -1,7 +1,6 @@
 /* global Accept */
 module.exports = events => {
   window.acceptResponseHandler = (response) => {
-    console.log('authorize response', response)
     events.paymentInfoReceived.dispatch(response.opaqueData)
   }
   events.requestAuthorizePayment.add(data => {
