@@ -22,6 +22,17 @@ module.exports = (events) => {
         source: source
       })
     })
+    events.paymentCompleted.add((items) => {
+      items.forEach((item) => {
+        mobileAnalyticsClient.recordMonetizationEvent({
+          productId: item.name,
+          price: parseFloat(item.basePrice) + item.adjustments
+            .Price,
+          quantity: item.quantity,
+          currency: 'USD'
+        })
+      })
+    })
     // Cognito data setup
     let syncClient = new AWS.CognitoSyncManager()
     syncClient.openOrCreateDataset('chefit', (err, dataset) => {

@@ -1,0 +1,13 @@
+{{#each data.entries}}
+<div class="catering">
+    <h1>{{fields.title}}</h1>
+    <div class="content">{{md fields.content}}</div>
+    <div class="points">
+      {{#each fields.bulletPoints}}
+        <span>{{this}}</span>
+      {{/each}}
+    </div>
+    <h2>{{fields.sectionTitle}}</h2>
+    {{#with fields.messagingRef.fields}} {{> messaging}} {{/with}}
+</div>
+{{/each}}

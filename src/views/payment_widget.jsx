@@ -269,6 +269,7 @@ export default class PaymentWidget extends React.Component {
 
   paymentSucceeded() {
     this.setState({paymentSuccessMessage: 'Thank you for your payment!'})
+    this.props.events.paymentCompleted.dispatch(this.state.items)
     this.cartDatasetPromise.then((dataset) => {
       return new Promise((resolve, reject) => {
         dataset.remove('items', (err, record) => {

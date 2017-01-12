@@ -14,6 +14,7 @@ module.exports = {
   messageSendFailed: new Signal(), // gets an error message
   paymentInfoReceived: new Signal(), // gets the Acceptjs Nonce information
   requestAuthorizePayment: new Signal(), // gets the payment information
+  paymentCompleted: new Signal(),
   // Tracking events
   track: new Signal(), // gets (data-title, event-name)
   debug: new Signal(), // for debugging
